@@ -11,7 +11,6 @@ interface Props {
 }
 
 const ReviewAndPublish: React.FC<Props> = ({ scope, location, category, title, description, image, submitPetition }) => {
-  // Determine correct image source
   const imageUrl = image instanceof File ? URL.createObjectURL(image) : image;
 
   return (
