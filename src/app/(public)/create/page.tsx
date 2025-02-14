@@ -20,8 +20,10 @@ export default function CreatePetitionPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null); // ✅ Store uploaded URL
   const [locationError, setLocationError] = useState(false);
 
+  // ✅ Updated handleNextStep to allow skipping image upload
   const handleNextStep = () => {
     if (step === 2 && !location.trim() && scope !== "Global") {
       setLocationError(true);
@@ -29,9 +31,12 @@ export default function CreatePetitionPage() {
     }
     setLocationError(false);
 
-    if (step === 6 && !image) return; // Prevent next step if no image
-
     if (step === 5 && method === "ai") return; // AI steps are handled separately
+
+    if (step === 6) {
+      setStep(7); // Always move to Step 7, even if image is missing
+      return;
+    }
 
     setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 7))); // Update for 7 steps
   };
@@ -70,7 +75,9 @@ export default function CreatePetitionPage() {
           {step === 4 && <ContentMethodSelector method={method} setMethod={setMethod} />}
           {step === 5 && method === "ai" && <AIForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
           {step === 5 && method === "manual" && <ManualForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
-          {step === 6 && <ImageUpload image={image} setImage={setImage} />}
+          {step === 6 && (
+            <ImageUpload image={image} setImage={setImage} setUploadedImageUrl={setUploadedImageUrl} />
+          )}
           {step === 7 && (
             <ReviewAndPublish
               scope={scope}
@@ -78,7 +85,7 @@ export default function CreatePetitionPage() {
               category={category}
               title={title}
               description={description}
-              image={image}
+              image={uploadedImageUrl} // ✅ Pass uploaded image URL
               submitPetition={() => alert("Petition Published!")}
             />
           )}
