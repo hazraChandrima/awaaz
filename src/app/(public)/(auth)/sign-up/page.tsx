@@ -9,7 +9,6 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +25,6 @@ export default function SignUp() {
         throw new Error("Sign-up failed");
       }
 
-      setShowVerificationModal(true);
     } catch (err: any) {
       console.log(err);
       setError(err.message || "Something went wrong");
