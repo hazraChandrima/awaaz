@@ -9,6 +9,7 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
+import HardBreak from "@tiptap/extension-hard-break";
 import { useCallback } from "react";
 
 interface AIReviewStepProps {
@@ -28,6 +29,9 @@ export default function AIReviewStep({
   prevStep,
   confirmStep,
 }: AIReviewStepProps) {
+  const processedTitle = title.replace(/[*"]/g, ""); // Remove * and "
+  const processedContent = description.replace(/[*"]/g, ""); // Remove * and "
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -38,14 +42,14 @@ export default function AIReviewStep({
       ListItem,
       Link,
       Image,
+      HardBreak.configure({ keepMarks: false }),
     ],
-    content: description,
+    content: processedContent,
     onUpdate: ({ editor }) => {
       setDescription(editor.getHTML());
     },
   });
 
-  // Function to insert an image from a URL
   const addImage = useCallback(() => {
     const url = prompt("Enter image URL");
     if (url) {
@@ -64,8 +68,8 @@ export default function AIReviewStep({
       <label className="block text-lg font-medium mb-1">Petition title</label>
       <input
         type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={processedTitle}
+        onChange={(e) => setTitle(e.target.value.replace(/[*"]/g, ""))}
         className="w-full p-2 border border-gray-400 rounded-md mb-4"
       />
 
@@ -86,10 +90,13 @@ export default function AIReviewStep({
           <button onClick={() => editor?.chain().focus().toggleOrderedList().run()} className="px-2 py-1 border rounded">
             1. List
           </button>
-          <button onClick={() => {
-            const url = prompt("Enter URL");
-            if (url) editor?.chain().focus().setLink({ href: url }).run();
-          }} className="px-2 py-1 border rounded">
+          <button
+            onClick={() => {
+              const url = prompt("Enter URL");
+              if (url) editor?.chain().focus().setLink({ href: url }).run();
+            }}
+            className="px-2 py-1 border rounded"
+          >
             🔗
           </button>
           <button onClick={addImage} className="px-2 py-1 border rounded">
