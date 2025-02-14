@@ -13,7 +13,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ image, setImage, setUploadedI
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Handle Image Selection
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -23,8 +22,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ image, setImage, setUploadedI
       setPreview(URL.createObjectURL(file));
     }
   };
-
-  // Handle Upload
   const handleUpload = async () => {
     if (!image) return;
 
@@ -55,13 +52,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ image, setImage, setUploadedI
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
-      {/* Header */}
       <h2 className="text-2xl font-bold text-[#223843] text-center">Add an image</h2>
       <p className="text-gray-600 text-center mt-1">
         Petitions with a photo get six times more signatures than petitions without a photo.
       </p>
-
-      {/* Image Upload Box */}
       <div className="mt-4 border-dashed border-2 border-gray-300 rounded-lg p-6 flex flex-col items-center">
         {preview ? (
           <img src={preview} alt="Preview" className="w-60 h-40 object-cover rounded-md shadow-md" />
@@ -80,8 +74,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ image, setImage, setUploadedI
           className="mt-4 px-6 py-2 border border-[#CA3C25] text-[#CA3C25] font-semibold rounded-lg cursor-pointer hover:bg-[#CA3C25] hover:text-white transition duration-200"
         >Select an Image
         </label>
-
-        {/* Image Upload Button */}
         {image && (
           <button
             className="mt-4 px-6 py-2 bg-[#CA3C25] text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-200"
@@ -91,12 +83,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ image, setImage, setUploadedI
             {uploading ? "Uploading..." : "Upload"}
           </button>
         )}
-
-        {/* Error Message */}
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
-
-      {/* Info Text */}
       <p className="text-gray-500 text-sm mt-3 text-center">
         Image sizes of at least <strong>1200 × 675 pixels</strong> will look good on all screens.
       </p>
