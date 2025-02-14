@@ -15,23 +15,21 @@ export default function Login() {
     if (!isLoaded) return;
 
     try {
-      const signInAttempt = await signIn.create({
-        identifier: email,
+      // Step 1: Start sign-in process
+      const result = await signIn.create({
+        identifier: email, // Email or username
         password,
       });
 
-      const result = await signInAttempt.attemptFirstFactor({
-        strategy: "password",
-        password,
-      });
-
+      // Step 2: Handle successful sign-in
       if (result.status === "complete") {
         window.location.href = "/";
       } else {
         setError("Sign-in attempt not completed.");
       }
     } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Something went wrong");
+      console.log("Clerk Sign-in Error:", err);
+      setError(err.errors?.[0]?.longMessage || "Something went wrong");
     }
   };
 
