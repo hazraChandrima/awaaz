@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { Armata } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 import PrelineScript from "./components/PrelineScript";
 import "./globals.css";
 import Footer from "./components/footer/Footer";
 
 import Navbar from "./components/navbar/Navbar";
-import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Awaaz",
@@ -17,22 +16,19 @@ const armata = Armata({ subsets: ["latin"], weight: "400", display: "swap" });
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <ClerkProvider>
-
-    <html lang="en">
-      <body
-        className={`${armata.className} antialiased`}
-        >
-        <Navbar/>
-        {children}
-        <Footer/>
-      </body>
-      <PrelineScript/>
-    </html>
-        </ClerkProvider>
+      <html lang="en">
+        <body className={`${armata.className} antialiased`}>
+          <Navbar />
+          {children}
+          <Footer />
+        </body>
+        <PrelineScript />
+      </html>
+    </ClerkProvider>
   );
 }
