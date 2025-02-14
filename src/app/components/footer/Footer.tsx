@@ -3,7 +3,7 @@ import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 const Footer = () => {
   return (
     <>
-      <footer className="mt-auto w-full max-w-[85rem] py-10 px-4 sm:px-6 lg:px-8 mx-auto">
+      <footer className="mt-8 w-full max-w-[85rem] py-10 px-4 sm:px-6 lg:px-8 mx-auto border-t">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-10">
           <div className="col-span-full hidden lg:col-span-1 lg:block">
             <a className="flex-none font-semibold text-xl text-black focus:outline-none focus:opacity-80" href="#" aria-label="Brand">Awaaz</a>
