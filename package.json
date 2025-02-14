@@ -20,6 +20,7 @@
     "@types/draft-js": "^0.11.18",
     "draft-js": "^0.11.7",
     "firebase": "^11.3.1",
+    "formidable": "^3.5.2",
     "framer-motion": "^12.4.2",
     "imagekit": "^6.0.0",
     "lucide-react": "^0.475.0",

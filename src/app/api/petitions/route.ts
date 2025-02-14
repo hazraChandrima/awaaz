@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import Petition from "@/models/Petition";
 
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -42,7 +40,6 @@ export async function POST(req: Request) {
       image: image_url,
       category: category || null,
       scope,
-      user: userId,
       location,
       goal,
       expiry: new Date(expiry),
