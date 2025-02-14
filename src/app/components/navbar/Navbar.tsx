@@ -15,7 +15,7 @@ function Navbar() {
             aria-label="Brand"
           >
             
-            <Image src={logo} className='h-[35px] w-[100px] md:h-[70px] md:w-[250px]' alt='site logo' />
+            <Image src={logo} className='h-[28px] w-[100px] md:h-[50px] md:w-[190px]' alt='site logo' />
           
           </Link>
 
@@ -31,8 +31,8 @@ function Navbar() {
             <svg
               className="hs-collapse-open:hidden size-4"
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -47,8 +47,8 @@ function Navbar() {
             <svg
               className="hs-collapse-open:block shrink-0 hidden size-4"
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
