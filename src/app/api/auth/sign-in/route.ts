@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import clientPromise from '../../../lib/mongodb';
 
 export async function POST(request: Request) {
   try {
-    
+    const { email, password } = await request.json();
+  
+    return NextResponse.json({email:email,password:password});
   } catch (error) {
     console.error(error);
     return NextResponse.json({
-      error: 'Failed to create user',
+      error: 'Authentication failed',
       status: 500,
     });
   }
