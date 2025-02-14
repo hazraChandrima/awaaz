@@ -20,6 +20,7 @@ export default function CreatePetitionPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null); // ✅ Store uploaded URL
   const [locationError, setLocationError] = useState(false);
 
   // ✅ Updated handleNextStep to allow skipping image upload
@@ -74,7 +75,9 @@ export default function CreatePetitionPage() {
           {step === 4 && <ContentMethodSelector method={method} setMethod={setMethod} />}
           {step === 5 && method === "ai" && <AIForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
           {step === 5 && method === "manual" && <ManualForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
-          {step === 6 && <ImageUpload image={image} setImage={setImage} />}
+          {step === 6 && (
+            <ImageUpload image={image} setImage={setImage} setUploadedImageUrl={setUploadedImageUrl} />
+          )}
           {step === 7 && (
             <ReviewAndPublish
               scope={scope}
@@ -82,7 +85,7 @@ export default function CreatePetitionPage() {
               category={category}
               title={title}
               description={description}
-              image={image}
+              image={uploadedImageUrl} // ✅ Pass uploaded image URL
               submitPetition={() => alert("Petition Published!")}
             />
           )}
