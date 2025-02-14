@@ -24,6 +24,35 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ image, setImage, setUploadedI
     }
   };
 
+  // Handle Upload
+  const handleUpload = async () => {
+    if (!image) return;
+
+    setUploading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append("file", image);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        setUploadedImageUrl(data.url);
+      } else {
+        setError(data.error || "Upload failed.");
+      }
+    } catch (err) {
+      setError("Something went wrong.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
       {/* Header */}
@@ -49,13 +78,23 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ image, setImage, setUploadedI
         <label
           htmlFor="imageUpload"
           className="mt-4 px-6 py-2 border border-[#CA3C25] text-[#CA3C25] font-semibold rounded-lg cursor-pointer hover:bg-[#CA3C25] hover:text-white transition duration-200"
-        >
-          Upload an image
+        >Select an Image
         </label>
-      </div>
 
-      {/* Error Message */}
-      {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
+        {/* Image Upload Button */}
+        {image && (
+          <button
+            className="mt-4 px-6 py-2 bg-[#CA3C25] text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-200"
+            onClick={handleUpload}
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Upload"}
+          </button>
+        )}
+
+        {/* Error Message */}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+      </div>
 
       {/* Info Text */}
       <p className="text-gray-500 text-sm mt-3 text-center">
