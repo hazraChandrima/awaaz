@@ -21,7 +21,6 @@ export default function Login() {
         password,
       });
 
-      // Step 2: Handle successful sign-in
       if (result.status === "complete") {
         window.location.href = "/";
       } else {
