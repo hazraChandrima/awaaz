@@ -6,11 +6,14 @@ interface Props {
   category: string;
   title: string;
   description: string;
-  image: File | null;
+  image: File | string | null; // Allow both File and URL string
   submitPetition: () => void;
 }
 
 const ReviewAndPublish: React.FC<Props> = ({ scope, location, category, title, description, image, submitPetition }) => {
+  // Determine correct image source
+  const imageUrl = image instanceof File ? URL.createObjectURL(image) : image;
+
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
       {/* Header */}
@@ -21,7 +24,7 @@ const ReviewAndPublish: React.FC<Props> = ({ scope, location, category, title, d
       <div className="space-y-3">
         <div className="border-b pb-2">
           <p className="text-lg font-semibold text-[#CA3C25]">Scope</p>
-          <p className="text-gray-700">{scope}</p>
+          <p className="text-gray-700">{scope || <span className="italic text-gray-500">Not specified</span>}</p>
         </div>
 
         {location && (
@@ -33,32 +36,34 @@ const ReviewAndPublish: React.FC<Props> = ({ scope, location, category, title, d
 
         <div className="border-b pb-2">
           <p className="text-lg font-semibold text-[#CA3C25]">Category</p>
-          <p className="text-gray-700">{category}</p>
+          <p className="text-gray-700">{category || <span className="italic text-gray-500">Not specified</span>}</p>
         </div>
+      </div>
 
+      {/* Image - Now Full Width of Card */}
+      <div className="mt-6">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt="Petition Preview"
+            className="mt-2 rounded-lg shadow-md border border-gray-300 w-full object-cover max-h-80"
+          />
+        ) : (
+          <p className="text-gray-500 italic mt-1 text-center">No image uploaded</p>
+        )}
+      </div>
+
+      {/* Title & Description */}
+      <div className="mt-4 space-y-3">
         <div className="border-b pb-2">
           <p className="text-lg font-semibold text-[#CA3C25]">Title</p>
-          <p className="text-gray-800 font-bold">{title}</p>
+          <p className="text-gray-800 font-bold">{title || <span className="italic text-gray-500">No title provided</span>}</p>
         </div>
 
         <div>
           <p className="text-lg font-semibold text-[#CA3C25]">Description</p>
-          <p className="text-gray-700">{description}</p>
+          <p className="text-gray-700">{description || <span className="italic text-gray-500">No description provided</span>}</p>
         </div>
-      </div>
-
-      {/* Image Preview */}
-      <div className="mt-4">
-        <p className="text-lg font-semibold text-[#CA3C25]">Petition Image</p>
-        {image ? (
-          <img
-            src={URL.createObjectURL(image)}
-            alt="Petition Preview"
-            className="mt-2 rounded-lg shadow-md border border-gray-300 w-40 h-40 object-cover"
-          />
-        ) : (
-          <p className="text-gray-500 italic mt-1">No image uploaded</p>
-        )}
       </div>
 
       {/* Publish Button */}
