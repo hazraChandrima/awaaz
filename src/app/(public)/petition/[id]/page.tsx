@@ -104,8 +104,8 @@ const PetitionPage = () => {
               width={700}
               height={200}
               className="rounded-2xl"
-              style={{ height: "200px" }}
-            />
+              style={{ height: "200px" }} ></Image>
+            
 
             <div className="mt-6">
               <h2 className="text-[#223843] text-1xl font-bold">Background</h2>
