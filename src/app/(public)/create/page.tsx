@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LoadScript } from "@react-google-maps/api";
 import ScopeSelector from "./_components/ScopeSelector";
 import LocationInput from "./_components/LocationInput";
@@ -12,7 +12,7 @@ import AIForm from "./_components/ai-steps/AIForm";
 import ImageUpload from "./_components/ImageUpload"; // New Image Upload Component
 
 export default function CreatePetitionPage() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number | null>(null); // Initially null for loading
   const [scope, setScope] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
@@ -20,10 +20,15 @@ export default function CreatePetitionPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null); // ✅ Store uploaded URL
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [locationError, setLocationError] = useState(false);
 
-  // ✅ Updated handleNextStep to allow skipping image upload
+  useEffect(() => {
+    setTimeout(() => {
+      setStep(1); // Show step 1 after a brief loading period
+    }, 1500);
+  }, []);
+
   const handleNextStep = () => {
     if (step === 2 && !location.trim() && scope !== "Global") {
       setLocationError(true);
@@ -34,76 +39,81 @@ export default function CreatePetitionPage() {
     if (step === 5 && method === "ai") return; // AI steps are handled separately
 
     if (step === 6) {
-      setStep(7); // Always move to Step 7, even if image is missing
+      setStep(7);
       return;
     }
 
-    setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 7))); // Update for 7 steps
+    setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev! + 1, 7)));
   };
 
   const handlePrevStep = () => {
-    if (step === 5 && method === "ai") return; // AI steps handled in AIForm
+    if (step === 5 && method === "ai") return;
 
-    setStep((prev) => (prev === 3 && scope === "Global" ? 1 : Math.max(prev - 1, 1)));
+    setStep((prev) => (prev === 3 && scope === "Global" ? 1 : Math.max(prev! - 1, 1)));
   };
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} libraries={["places"]}>
-      <div className="bg-[#E8EBE4] text-[#223843]">
-        <div className="w-full p-6 bg-white shadow-lg">
-          <div className="mb-6 text-center">
-            <p className="text-lg font-semibold">Step {step} of 7</p>
-            <div className="mt-2 h-2 w-full bg-gray-200 rounded">
-              <div className="h-2 bg-[#CA3C25] rounded transition-all" style={{ width: `${(step / 7) * 100}%` }}></div>
-            </div>
+      <div className="bg-white text-[#223843]">
+        {step === null ? (
+          <div className="flex flex-col items-center">
+            <div className="mt-10 w-12 h-12 border-4 border-[#CA3C25] border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-10 text-lg font-semibold text-[#223843]">Loading...</p>
           </div>
-
-          {/* Form Steps */}
-          {step === 1 && (
-            <ScopeSelector
-              scope={scope}
-              setScope={(val) => {
-                setScope(val);
-                if (val === "Global") setStep(3);
-              }}
-            />
-          )}
-          {step === 2 && scope !== "Global" && (
-            <LocationInput location={location} setLocation={setLocation} error={locationError} />
-          )}
-          {step === 3 && <CategorySelector category={category} setCategory={setCategory} />}
-          {step === 4 && <ContentMethodSelector method={method} setMethod={setMethod} />}
-          {step === 5 && method === "ai" && <AIForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
-          {step === 5 && method === "manual" && <ManualForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
-          {step === 6 && (
-            <ImageUpload image={image} setImage={setImage} setUploadedImageUrl={setUploadedImageUrl} />
-          )}
-          {step === 7 && (
-            <ReviewAndPublish
-              scope={scope}
-              location={location}
-              category={category}
-              title={title}
-              description={description}
-              image={uploadedImageUrl} // ✅ Pass uploaded image URL
-              submitPetition={() => alert("Petition Published!")}
-            />
-          )}
-
-          {/* Navigation Buttons (Hidden in Step 5) */}
-          {step !== 5 && (
-            <div className="mt-6 flex justify-between">
-              {step > 1 && (
-                <button className="px-4 py-2 bg-gray-500 text-white rounded" onClick={handlePrevStep}>
-                  Back
-                </button>
-              )}
-              <button className="px-4 py-2 bg-[#CA3C25] text-white rounded" onClick={handleNextStep}>
-                {step === 7 ? "Publish" : "Next"}
-              </button>
+        ) : (
+          <div className="w-full p-6 bg-white shadow-lg">
+            <div className="mb-6 text-center">
+              <p className="text-lg font-semibold">Step {step} of 7</p>
+              <div className="mt-2 h-2 w-full bg-gray-200 rounded">
+                <div className="h-2 bg-[#CA3C25] rounded transition-all" style={{ width: `${(step / 7) * 100}%` }}></div>
+              </div>
             </div>
-          )}
-        </div>
+
+            {step === 1 && (
+              <ScopeSelector
+                scope={scope}
+                setScope={(val) => {
+                  setScope(val);
+                  if (val === "Global") setStep(3);
+                }}
+              />
+            )}
+            {step === 2 && scope !== "Global" && (
+              <LocationInput location={location} setLocation={setLocation} error={locationError} />
+            )}
+            {step === 3 && <CategorySelector category={category} setCategory={setCategory} />}
+            {step === 4 && <ContentMethodSelector method={method} setMethod={setMethod} />}
+            {step === 5 && method === "ai" && <AIForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
+            {step === 5 && method === "manual" && <ManualForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
+            {step === 6 && (
+              <ImageUpload image={image} setImage={setImage} setUploadedImageUrl={setUploadedImageUrl} />
+            )}
+            {step === 7 && (
+              <ReviewAndPublish
+                scope={scope}
+                location={location}
+                category={category}
+                title={title}
+                description={description}
+                image={uploadedImageUrl}
+                submitPetition={() => alert("Petition Published!")}
+              />
+            )}
+
+            {step !== 5 && (
+              <div className="mt-6 flex justify-between">
+                {step > 1 && (
+                  <button className="px-4 py-2 bg-gray-500 text-white rounded" onClick={handlePrevStep}>
+                    Back
+                  </button>
+                )}
+                <button className="px-4 py-2 bg-[#CA3C25] text-white rounded" onClick={handleNextStep}>
+                  {step === 7 ? "Publish" : "Next"}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </LoadScript>
   );
