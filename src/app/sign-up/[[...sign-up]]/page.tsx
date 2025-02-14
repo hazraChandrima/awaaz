@@ -1,5 +1,3 @@
-import { SignUp } from "@clerk/nextjs";
-import Image from "next/image";
 import { FaFacebook, FaGoogle, FaLinkedinIn } from "react-icons/fa6";
 
 export default function Page() {
