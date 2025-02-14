@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+
     const data = await req.json();
     const { firstName, lastName, email, password } = data;
 
@@ -11,6 +12,7 @@ export async function POST(req: Request) {
       email,
       password,
     });
+
     
   } catch (error) {
     console.error("Error in users route:", error);
