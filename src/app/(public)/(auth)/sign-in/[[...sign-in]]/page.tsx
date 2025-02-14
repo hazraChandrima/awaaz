@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSignIn } from "@clerk/nextjs";
+import { SignInButton, useSignIn } from "@clerk/nextjs";
 import { FaGoogle, FaFacebook, FaLinkedinIn } from "react-icons/fa";
 
 export default function Login() {
@@ -10,7 +10,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // Handle Email/Password Sign In
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoaded) return;
@@ -21,14 +20,13 @@ export default function Login() {
         password,
       });
 
-      // Complete the sign-in process
       const result = await signInAttempt.attemptFirstFactor({
         strategy: "password",
         password,
       });
 
       if (result.status === "complete") {
-        window.location.href = "/"; // Redirect on success
+        window.location.href = "/";
       } else {
         setError("Sign-in attempt not completed.");
       }
@@ -37,7 +35,6 @@ export default function Login() {
     }
   };
 
-  // Handle OAuth Sign In (Google, Facebook, LinkedIn)
   const handleOAuthSignIn = async (
     provider: "oauth_google" | "oauth_facebook" | "oauth_linkedin"
   ) => {
@@ -46,8 +43,8 @@ export default function Login() {
     try {
       await signIn.authenticateWithRedirect({
         strategy: provider,
-        redirectUrl: "/sso-callback", // Temporary redirect for Clerk to process
-        redirectUrlComplete: "/", // Final redirect after authentication
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/",
       });
     } catch (err: any) {
       setError(err.errors[0]?.message || "OAuth login failed");
@@ -148,13 +145,14 @@ export default function Login() {
                   required
                 />
               </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#CA3C25] text-white hover:bg-[#B83420] transition duration-200"
-              >
-                Sign In
-              </button>
+              <SignInButton>
+                <button
+                  type="submit"
+                  className="w-full py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#CA3C25] text-white hover:bg-[#B83420] transition duration-200"
+                >
+                  Sign In
+                </button>
+              </SignInButton>
             </div>
           </form>
         </div>

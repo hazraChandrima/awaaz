@@ -9,7 +9,7 @@ export default function SSOCallback() {
   const router = useRouter();
 
   useEffect(() => {
-    handleRedirectCallback().then(() => {
+    handleRedirectCallback({}).then(() => {
       router.push("/browse"); // Redirect after authentication
     });
   }, []);
