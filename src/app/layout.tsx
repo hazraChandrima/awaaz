@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Armata } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import PrelineScript from "./components/PrelineScript";
+import "./globals.css";
+import Footer from "./components/footer/Footer";
+
 import Navbar from "./components/navbar/Navbar";
 import "./globals.css";
 
@@ -19,13 +22,17 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${armata.className} antialiased`}>
-          <Navbar />
-          <main className="container mx-auto p-4">{children}</main>
-        </body>
-        <PrelineScript />
-      </html>
-    </ClerkProvider>
+
+    <html lang="en">
+      <body
+        className={`${armata.className} antialiased`}
+        >
+        <Navbar/>
+        {children}
+        <Footer/>
+      </body>
+      <PrelineScript/>
+    </html>
+        </ClerkProvider>
   );
 }

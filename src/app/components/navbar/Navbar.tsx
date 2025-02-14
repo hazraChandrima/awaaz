@@ -1,6 +1,8 @@
 "use client";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import logo from '../../../../public/assets/logo.jpeg';
+import Image from 'next/image';
 
 function Navbar() {
   return (
@@ -12,7 +14,9 @@ function Navbar() {
             className="flex-none font-bold text-xl text-[#CA3C25] focus:outline-none focus:opacity-80"
             aria-label="Brand"
           >
-            Awaaz
+            
+            <Image src={logo} className='h-[35px] w-[100px] md:h-[70px] md:w-[250px]' alt='site logo' />
+          
           </Link>
 
           <button
