@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import Petition from "@/models/Petition";
+import Petition from "@/interfaces/Petition";
 
 export async function POST(req: Request) {
   try {
