@@ -4,6 +4,8 @@ import PrelineScript from "./components/PrelineScript";
 import "./globals.css";
 import Footer from "./components/footer/Footer";
 
+import Navbar from "./components/navbar/Navbar";
+
 export const metadata: Metadata = {
   title: "Awaaz",
   description: "Raise your voice, Shape the change.",
@@ -21,6 +23,7 @@ export default function RootLayout({
       <body
         className={`${armata.className} antialiased`}
       >
+        <Navbar/>
         {children}
         <Footer/>
       </body>
