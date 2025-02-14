@@ -83,8 +83,8 @@ export default function CreatePetitionPage() {
             />
           )}
 
-          {/* Navigation Buttons (Hidden in ManualForm steps) */}
-          {!(step === 5 && method === "manual") && (
+          {/* Navigation Buttons (Hidden in Step 5) */}
+          {step !== 5 && (
             <div className="mt-6 flex justify-between">
               {step > 1 && (
                 <button className="px-4 py-2 bg-gray-500 text-white rounded" onClick={handlePrevStep}>
