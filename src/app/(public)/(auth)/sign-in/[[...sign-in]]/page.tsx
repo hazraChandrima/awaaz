@@ -16,13 +16,24 @@ export default function Login() {
     if (!isLoaded) return;
 
     try {
-      await signIn.create({
+      const signInAttempt = await signIn.create({
         identifier: email,
         password,
       });
-      window.location.href = "/dashboard"; // Redirect after login
+
+      // Complete the sign-in process
+      const result = await signInAttempt.attemptFirstFactor({
+        strategy: "password",
+        password,
+      });
+
+      if (result.status === "complete") {
+        window.location.href = "/"; // Redirect on success
+      } else {
+        setError("Sign-in attempt not completed.");
+      }
     } catch (err: any) {
-      setError(err.errors[0]?.message || "Something went wrong");
+      setError(err.errors?.[0]?.message || "Something went wrong");
     }
   };
 
@@ -36,7 +47,7 @@ export default function Login() {
       await signIn.authenticateWithRedirect({
         strategy: provider,
         redirectUrl: "/sso-callback", // Temporary redirect for Clerk to process
-        redirectUrlComplete: "/dashboard", // Final redirect after authentication
+        redirectUrlComplete: "/", // Final redirect after authentication
       });
     } catch (err: any) {
       setError(err.errors[0]?.message || "OAuth login failed");
