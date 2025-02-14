@@ -21,9 +21,7 @@ export default function SignUp() {
     try {
       const signUpAttempt = await signUp.create({
         emailAddress: email,
-        password:password,
-        lastName: lastName,
-        firstName: firstName,
+        password:password
       });
 
       await signUpAttempt.prepareEmailAddressVerification({
