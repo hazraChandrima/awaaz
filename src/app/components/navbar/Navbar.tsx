@@ -1,10 +1,33 @@
 "use client";
+
 import Link from "next/link";
 import logo from "../../../../public/assets/logo.jpeg";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { auth } from "@/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 function Navbar() {
-  // const { isSignedIn, user } = useUser();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("User signed out");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <header className="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200">
@@ -25,50 +48,52 @@ function Navbar() {
           <button
             type="button"
             className="hs-collapse-toggle md:hidden relative size-9 flex justify-center items-center font-medium text-[12px] rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
-            id="hs-header-base-collapse"
-            aria-expanded="false"
-            aria-controls="hs-header-base"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle navigation"
-            data-hs-collapse="#hs-header-base"
           >
-            <svg
-              className="hs-collapse-open:hidden size-4"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="3" x2="21" y1="6" y2="6" />
-              <line x1="3" x2="21" y1="12" y2="12" />
-              <line x1="3" x2="21" y1="18" y2="18" />
-            </svg>
-            <svg
-              className="hs-collapse-open:block shrink-0 hidden size-4"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+            {isMenuOpen ? (
+              <svg
+                className="size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            ) : (
+              <svg
+                className="size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="3" x2="21" y1="6" y2="6" />
+                <line x1="3" x2="21" y1="12" y2="12" />
+                <line x1="3" x2="21" y1="18" y2="18" />
+              </svg>
+            )}
             <span className="sr-only">Toggle navigation</span>
           </button>
         </div>
 
         <div
           id="hs-header-base"
-          className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:block"
+          className={`hs-collapse ${
+            isMenuOpen ? "block" : "hidden"
+          } md:block overflow-hidden transition-all duration-300 basis-full grow`}
           aria-labelledby="hs-header-base-collapse"
         >
           <div className="overflow-hidden overflow-y-auto max-h-[75vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
@@ -78,6 +103,7 @@ function Navbar() {
                   <Link
                     href="/"
                     className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     Home
                   </Link>
@@ -85,15 +111,19 @@ function Navbar() {
                   <Link
                     href="/browse"
                     className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     Browse
                   </Link>
-                  <Link
-                    href="/dashboard/creator"
-                    className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
-                  >
-                    Dashboard
-                  </Link>
+                  {isLoggedIn && (
+                    <Link
+                      href="/dashboard/creator"
+                      className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                  )}
                 </div>
               </div>
 
@@ -102,17 +132,31 @@ function Navbar() {
               </div>
 
               <div className="flex flex-wrap items-center gap-x-1.5">
-                  <a
-                    href="/sign-in"
+                {isLoggedIn ? (
+                  <button
+                    onClick={handleLogout}
                     className="py-[7px] px-2.5 inline-flex items-center font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"
                   >
-                    Sign In
-                  </a>
-                  <a 
-                    href="/sign-up"
-                    className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
-                    Get started
-                  </a>
+                    Log Out
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      href="/sign-in"
+                      className="py-[7px] px-2.5 inline-flex items-center font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/sign-up"
+                      className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Get started
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
