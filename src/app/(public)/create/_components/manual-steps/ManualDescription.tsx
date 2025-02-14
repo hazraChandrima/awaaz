@@ -1,5 +1,8 @@
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Editor, EditorState, ContentState, RichUtils } from "draft-js";
+import "draft-js/dist/Draft.css";
 
 interface ManualDescriptionProps {
   description: string;
@@ -14,38 +17,76 @@ const ManualDescription: React.FC<ManualDescriptionProps> = ({
   prevStep,
   confirmStep,
 }) => {
+  // ✅ Initialize EditorState from description
+  const [editorState, setEditorState] = useState(() =>
+    description
+      ? EditorState.createWithContent(ContentState.createFromText(description))
+      : EditorState.createEmpty()
+  );
+
+  // ✅ Sync changes when `description` prop updates
+  useEffect(() => {
+    if (description && description !== editorState.getCurrentContent().getPlainText()) {
+      setEditorState(EditorState.createWithContent(ContentState.createFromText(description)));
+    }
+  }, [description]);
+  
+
+  const handleEditorChange = (newState: EditorState) => {
+    // ✅ Ensure we don't modify state incorrectly
+    setEditorState(newState);
+  
+    // ✅ Extract text correctly
+    const newText = newState.getCurrentContent().getPlainText();
+  
+    // ✅ Update only if text has changed (prevents re-renders messing up input)
+    if (newText !== description) {
+      setDescription(newText);
+    }
+  };
+  
+
+  // ✅ Handle formatting (Bold, Italic, etc.)
+  const handleStyleClick = (style: string) => {
+    setEditorState(RichUtils.toggleInlineStyle(editorState, style));
+  };
+
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
       {/* Title */}
       <h1 className="text-3xl font-bold text-[#223843]">Tell your story</h1>
       <p className="text-gray-600 mt-1">
-        Start from scratch or use our recommended structure below. You can
-        always edit your petition, even after publishing.
+        Start from scratch or use our recommended structure below. You can always edit your petition, even after publishing.
       </p>
 
-      {/* CKEditor */}
-      <div className="mt-4">
-        <CKEditor
-          editor={ClassicEditor}
-          data={description}
-          onChange={(_, editor) => {
-            setDescription(editor.getData());
-          }}
-          config={{
-            toolbar: [
-              "bold",
-              "italic",
-              "|",
-              "bulletedList",
-              "numberedList",
-              "|",
-              "link",
-              "imageUpload",
-              "undo",
-              "redo",
-            ],
-          }}
-        />
+      {/* Toolbar */}
+      <div className="flex gap-2 mt-4 p-2 border-b border-gray-300">
+        <button
+          className="p-1.5 border rounded-md hover:bg-gray-200"
+          onClick={() => handleStyleClick("BOLD")}
+        >
+          <b>B</b>
+        </button>
+        <button
+          className="p-1.5 border rounded-md hover:bg-gray-200"
+          onClick={() => handleStyleClick("ITALIC")}
+        >
+          <i>I</i>
+        </button>
+        <button
+          className="p-1.5 border rounded-md hover:bg-gray-200"
+          onClick={() => handleStyleClick("UNDERLINE")}
+        >
+          <u>U</u>
+        </button>
+        <button className="p-1.5 border rounded-md hover:bg-gray-200">🔗</button>
+        <button className="p-1.5 border rounded-md hover:bg-gray-200">📷</button>
+        <button className="p-1.5 border rounded-md hover:bg-gray-200">🎥</button>
+      </div>
+
+      {/* Draft.js Editor */}
+      <div className="mt-2 border border-gray-300 rounded-lg p-2 min-h-[150px]">
+        <Editor editorState={editorState} onChange={handleEditorChange} placeholder="Start writing..." />
       </div>
 
       {/* Navigation Buttons */}
