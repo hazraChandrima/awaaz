@@ -17,10 +17,12 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await fetch("/api/auth/sign-up", {
@@ -41,10 +43,14 @@ export default function SignUp() {
     } catch (err: any) {
       console.error("Sign-up error:", err);
       setError(err.message || "Something went wrong during sign-up.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleOAuthSignUp = async (provider: string) => {
+    setLoading(true);
+
     try {
       let authProvider;
       switch (provider) {
@@ -64,6 +70,8 @@ export default function SignUp() {
     } catch (err: any) {
       console.error("OAuth sign-up error:", err);
       setError(err.message || "Failed to sign up with OAuth.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,6 +99,7 @@ export default function SignUp() {
               type="button"
               className="w-full py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
               onClick={() => handleOAuthSignUp("google")}
+              disabled={loading}
             >
               <FaGoogle /> Google
             </button>
@@ -98,13 +107,13 @@ export default function SignUp() {
               type="button"
               className="w-full py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
               onClick={() => handleOAuthSignUp("facebook")}
+              disabled={loading}
             >
               <FaFacebook /> Facebook
             </button>
             <button
               type="button"
               className="w-full py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
-              onClick={() => handleOAuthSignUp("linkedin")}
               disabled
             >
               <FaLinkedinIn /> LinkedIn
@@ -150,13 +159,25 @@ export default function SignUp() {
             />
             <button
               type="submit"
-              className="w-full py-3 px-4 bg-[#CA3C25] text-white rounded-lg hover:bg-[#B83420]"
+              className="w-full py-3 px-4 bg-[#CA3C25] text-white rounded-lg hover:bg-[#B83420] flex justify-center items-center"
+              disabled={loading}
             >
-              Sign Up
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-gray-300 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </form>
         </div>
       </div>
+
+      {/* Loader */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="w-10 h-10 border-4 border-gray-300 border-t-[#CA3C25] rounded-full animate-spin"></div>
+        </div>
+      )}
 
       {showVerificationModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
