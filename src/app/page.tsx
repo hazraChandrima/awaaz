@@ -30,7 +30,7 @@ export default function Home() {
               justice, climate action, or policy reform, turn your passion into
               impact and be the catalyst for transformation.
             </p>
-            <div className="flex space-x-4 mt-2">
+            <div className="flex space-x-4 mt-6">
               <button className="py-3 px-4 inline-flex items-center font-semibold text-sm rounded-md border border-[#CA3C25] text-[#CA3C25] bg-transparent focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                 Get Started
               </button>
