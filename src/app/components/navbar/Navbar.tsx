@@ -1,8 +1,8 @@
 "use client";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import logo from '../../../../public/assets/logo.jpeg';
-import Image from 'next/image';
+import logo from "../../../../public/assets/logo.jpeg";
+import Image from "next/image";
 
 function Navbar() {
   return (
@@ -14,9 +14,11 @@ function Navbar() {
             className="flex-none font-bold text-xl text-[#CA3C25] focus:outline-none focus:opacity-80"
             aria-label="Brand"
           >
-            
-            <Image src={logo} className='h-[28px] w-[100px] md:h-[50px] md:w-[190px]' alt='site logo' />
-          
+            <Image
+              src={logo}
+              className="h-[35px] w-[100px] md:h-[70px] md:w-[250px]"
+              alt="site logo"
+            />
           </Link>
 
           <button
@@ -94,25 +96,17 @@ function Navbar() {
 
               <div className="flex flex-wrap items-center gap-x-1.5">
                 <SignedOut>
-                  <SignInButton>
-                    <a className="py-[7px] px-2.5 inline-flex items-center font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100">
-                      Sign In
-                    </a>
-                  </SignInButton>
+                  <a
+                    href="/sign-in"
+                    className="py-[7px] px-2.5 inline-flex items-center font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"
+                  >
+                    Sign In
+                  </a>
                 </SignedOut>
-
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-
                 <SignedOut>
-                  <SignInButton>
-                    <a
-                      className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none"
-                    >
-                      Get started
-                    </a>
-                  </SignInButton>
+                  <a className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                    Get started
+                  </a>
                 </SignedOut>
               </div>
             </div>
