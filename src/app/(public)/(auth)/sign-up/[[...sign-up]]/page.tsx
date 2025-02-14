@@ -21,11 +21,25 @@ export default function SignUp() {
     try {
       const signUpAttempt = await signUp.create({
         emailAddress: email,
-        password:password
+        password: password,
       });
 
       await signUpAttempt.prepareEmailAddressVerification({
         strategy: "email_code",
+      });
+
+      const { createdUserId } = signUpAttempt;
+
+      await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clerkId: createdUserId,
+          email,
+          name: `${firstName} ${lastName}`,
+        }),
       });
 
       setShowVerificationModal(true);
@@ -34,6 +48,7 @@ export default function SignUp() {
       setError(err.errors?.message || "Something went wrong");
     }
   };
+
 
   const handleOAuthSignUp = async (
     provider: "oauth_google" | "oauth_facebook" | "oauth_linkedin"
