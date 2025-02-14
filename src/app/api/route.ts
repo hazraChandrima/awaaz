@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../lib/mongodb';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export async function GET() {
-  try {5
+export async function GET(req:NextApiRequest, res:NextApiResponse) {
+  try {
     const client = await clientPromise;
     const db = client.db('sample_mflix');
     const collection = db.collection('comments');
