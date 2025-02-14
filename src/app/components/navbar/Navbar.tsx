@@ -1,11 +1,10 @@
 "use client";
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import logo from "../../../../public/assets/logo.jpeg";
 import Image from "next/image";
 
 function Navbar() {
-  const { isSignedIn, user } = useUser();
+  // const { isSignedIn, user } = useUser();
 
   return (
     <header className="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200">
@@ -97,34 +96,17 @@ function Navbar() {
               </div>
 
               <div className="flex flex-wrap items-center gap-x-1.5">
-                <SignedOut>
                   <a
                     href="/sign-in"
                     className="py-[7px] px-2.5 inline-flex items-center font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"
                   >
                     Sign In
                   </a>
-                </SignedOut>
-                <SignedOut>
                   <a 
                     href="/sign-up"
                     className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                     Get started
                   </a>
-                </SignedOut>
-                <SignedIn>
-                  <div className="flex items-center gap-2">
-                    <UserButton
-                      appearance={{
-                        elements: {
-                          userButtonAvatarBox: "h-8 w-8",
-                          userButtonPopoverCard: "shadow-lg rounded-lg",
-                          userButtonPopoverActionButton: "hover:bg-gray-100"
-                        }
-                      }}
-                    />
-                  </div>
-                </SignedIn>
               </div>
             </div>
           </div>

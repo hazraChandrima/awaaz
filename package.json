@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.11.3",
     "@google/generative-ai": "^0.21.0",
     "@react-google-maps/api": "^2.20.6",
     "@tiptap/extension-image": "^2.11.5",
