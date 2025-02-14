@@ -15,13 +15,9 @@ export default function Login() {
     if (!isLoaded) return;
 
     try {
-      const signInAttempt = await signIn.create({
-        identifier: email,
-        password,
-      });
-
-      const result = await signInAttempt.attemptFirstFactor({
-        strategy: "password",
+      // Step 1: Start sign-in process
+      const result = await signIn.create({
+        identifier: email, // Email or username
         password,
       });
 
@@ -31,7 +27,8 @@ export default function Login() {
         setError("Sign-in attempt not completed.");
       }
     } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Something went wrong");
+      console.log("Clerk Sign-in Error:", err);
+      setError(err.errors?.[0]?.longMessage || "Something went wrong");
     }
   };
 
