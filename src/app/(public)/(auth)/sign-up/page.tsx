@@ -2,15 +2,13 @@
 
 import { useState } from "react";
 import { FaGoogle, FaFacebook, FaLinkedinIn } from "react-icons/fa6";
-import { auth } from "@/firebase";
+import { useRouter } from "next/navigation";
 import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  GoogleAuthProvider,
   FacebookAuthProvider,
+  GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { auth } from "@/firebase";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -25,13 +23,19 @@ export default function SignUp() {
     e.preventDefault();
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const response = await fetch("/api/auth/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName, lastName, email, password }),
+      });
 
-      await sendEmailVerification(userCredential.user);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Sign-up failed");
+      }
+
       setShowVerificationModal(true);
       setError("");
     } catch (err: any) {
@@ -166,7 +170,10 @@ export default function SignUp() {
               account.
             </p>
             <button
-              onClick={() => setShowVerificationModal(false)}
+              onClick={() => {
+                setShowVerificationModal(false);
+                window.location.href = "/";
+              }}
               className="mt-4 w-full py-2 px-4 bg-[#CA3C25] text-white rounded-lg hover:bg-[#B83420]"
             >
               Close

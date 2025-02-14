@@ -19,6 +19,9 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
+        <head>
+         <link rel="icon" href="/favicon.ico" /> 
+        </head>
         <body className={`${armata.className} antialiased`}>
           <Navbar />
            <main className="max-w-[85rem] mx-auto lg:py-4 ">{children}</main>
