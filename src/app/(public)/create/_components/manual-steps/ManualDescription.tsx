@@ -17,14 +17,11 @@ const ManualDescription: React.FC<ManualDescriptionProps> = ({
   prevStep,
   confirmStep,
 }) => {
-  // ✅ Initialize EditorState from description
   const [editorState, setEditorState] = useState(() =>
     description
       ? EditorState.createWithContent(ContentState.createFromText(description))
       : EditorState.createEmpty()
   );
-
-  // ✅ Sync changes when `description` prop updates
   useEffect(() => {
     if (description && description !== editorState.getCurrentContent().getPlainText()) {
       setEditorState(EditorState.createWithContent(ContentState.createFromText(description)));
@@ -33,20 +30,13 @@ const ManualDescription: React.FC<ManualDescriptionProps> = ({
   
 
   const handleEditorChange = (newState: EditorState) => {
-    // ✅ Ensure we don't modify state incorrectly
     setEditorState(newState);
-  
-    // ✅ Extract text correctly
     const newText = newState.getCurrentContent().getPlainText();
-  
-    // ✅ Update only if text has changed (prevents re-renders messing up input)
     if (newText !== description) {
       setDescription(newText);
     }
   };
   
-
-  // ✅ Handle formatting (Bold, Italic, etc.)
   const handleStyleClick = (style: string) => {
     setEditorState(RichUtils.toggleInlineStyle(editorState, style));
   };

@@ -12,17 +12,64 @@ interface Props {
 
 const ReviewAndPublish: React.FC<Props> = ({ scope, location, category, title, description, image, submitPetition }) => {
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-2">Review Your Petition</h2>
-      <p><strong>Scope:</strong> {scope}</p>
-      {location && <p><strong>Location:</strong> {location}</p>}
-      <p><strong>Category:</strong> {category}</p>
-      <p><strong>Title:</strong> {title}</p>
-      <p><strong>Description:</strong> {description}</p>
-      {image && <img src={URL.createObjectURL(image)} alt="Preview" className="w-32 h-32 mt-2" />}
-      <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded" onClick={submitPetition}>
-        Publish Petition
-      </button>
+    <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      {/* Header */}
+      <h2 className="text-2xl font-bold text-[#223843] mb-4">Review Your Petition</h2>
+      <p className="text-gray-600 mb-4">Double-check the details before publishing. You can still go back and edit.</p>
+
+      {/* Petition Details */}
+      <div className="space-y-3">
+        <div className="border-b pb-2">
+          <p className="text-lg font-semibold text-[#CA3C25]">Scope</p>
+          <p className="text-gray-700">{scope}</p>
+        </div>
+
+        {location && (
+          <div className="border-b pb-2">
+            <p className="text-lg font-semibold text-[#CA3C25]">Location</p>
+            <p className="text-gray-700">{location}</p>
+          </div>
+        )}
+
+        <div className="border-b pb-2">
+          <p className="text-lg font-semibold text-[#CA3C25]">Category</p>
+          <p className="text-gray-700">{category}</p>
+        </div>
+
+        <div className="border-b pb-2">
+          <p className="text-lg font-semibold text-[#CA3C25]">Title</p>
+          <p className="text-gray-800 font-bold">{title}</p>
+        </div>
+
+        <div>
+          <p className="text-lg font-semibold text-[#CA3C25]">Description</p>
+          <p className="text-gray-700">{description}</p>
+        </div>
+      </div>
+
+      {/* Image Preview */}
+      <div className="mt-4">
+        <p className="text-lg font-semibold text-[#CA3C25]">Petition Image</p>
+        {image ? (
+          <img
+            src={URL.createObjectURL(image)}
+            alt="Petition Preview"
+            className="mt-2 rounded-lg shadow-md border border-gray-300 w-40 h-40 object-cover"
+          />
+        ) : (
+          <p className="text-gray-500 italic mt-1">No image uploaded</p>
+        )}
+      </div>
+
+      {/* Publish Button */}
+      <div className="mt-6 flex justify-center">
+        <button
+          className="px-6 py-3 bg-[#CA3C25] text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-200"
+          onClick={submitPetition}
+        >
+          🚀 Publish Petition
+        </button>
+      </div>
     </div>
   );
 };

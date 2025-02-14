@@ -22,6 +22,7 @@ export default function CreatePetitionPage() {
   const [image, setImage] = useState<File | null>(null);
   const [locationError, setLocationError] = useState(false);
 
+  // ✅ Updated handleNextStep to allow skipping image upload
   const handleNextStep = () => {
     if (step === 2 && !location.trim() && scope !== "Global") {
       setLocationError(true);
@@ -29,9 +30,12 @@ export default function CreatePetitionPage() {
     }
     setLocationError(false);
 
-    if (step === 6 && !image) return; // Prevent next step if no image
-
     if (step === 5 && method === "ai") return; // AI steps are handled separately
+
+    if (step === 6) {
+      setStep(7); // Always move to Step 7, even if image is missing
+      return;
+    }
 
     setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 7))); // Update for 7 steps
   };
