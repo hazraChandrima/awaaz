@@ -70,7 +70,13 @@ export default function AIForm({ setTitle, setDescription, setStep }: AIFormProp
 
   return (
     <>
-      {aiStep === 1 && <AIPromptStep userPrompt={userPrompt} setUserPrompt={setUserPrompt} nextStep={() => setAiStep(2)} />}
+      {aiStep === 1 && (
+        <AIPromptStep
+          userPrompt={userPrompt}
+          setUserPrompt={setUserPrompt}
+          nextStep={() => setAiStep(2)}
+        />
+      )}
       {aiStep === 2 && (
         <AIPersonalStoryStep
           personalStory={personalStory}
@@ -93,6 +99,18 @@ export default function AIForm({ setTitle, setDescription, setStep }: AIFormProp
             setStep(6);
           }}
         />
+      )}
+
+      {/* Back button to return to Content Method Selection (Step 4) */}
+      {aiStep === 1 && (
+        <div className="mt-6 flex">
+          <button
+            className="px-4 py-2 bg-gray-500 text-white rounded"
+            onClick={() => setStep(4)} // Go back to Content Method Selector
+          >
+            Back
+          </button>
+        </div>
       )}
     </>
   );
