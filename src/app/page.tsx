@@ -33,13 +33,12 @@ export default function Home() {
           </h1>
           <div className="max-w-4xl">
             <p className="mt-5 text-[#223843] text-lg">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate
-              distinctio illum nulla aperiam laborum reiciendis pariatur
-              doloremque optio commodi deleniti ex saepe, provident, ea
-              molestias? Quisquam voluptates quae vel neque quod fugiat error
-              repellat, repellendus asperiores consequuntur molestias eum
-              corrupti, nobis vero quos? Nisi mollitia natus tempora quam
-              suscipit libero quae doloribus.
+              Your voice has the power to spark change. Awaaz empowers
+              individuals and communities to take action on issues that matter.
+              With our intuitive Petition Maker, you can mobilize support, raise
+              awareness, and influence decision-makers. Whether it’s social
+              justice, climate action, or policy reform, turn your passion into
+              impact and be the catalyst for transformation.
             </p>
             <div className="flex space-x-4 mt-2">
               <button className="py-3 px-4 inline-flex items-center font-semibold text-sm rounded-md border border-[#CA3C25] text-[#CA3C25] bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
