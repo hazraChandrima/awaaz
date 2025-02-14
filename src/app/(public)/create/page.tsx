@@ -9,6 +9,7 @@ import ContentMethodSelector from "./_components/ContentMethodSelector";
 import ManualForm from "./_components/manual-steps/ManualForm";
 import ReviewAndPublish from "./_components/ReviewAndPublish";
 import AIForm from "./_components/ai-steps/AIForm";
+import ImageUpload from "./_components/ImageUpload"; // New Image Upload Component
 
 export default function CreatePetitionPage() {
   const [step, setStep] = useState(1);
@@ -28,9 +29,11 @@ export default function CreatePetitionPage() {
     }
     setLocationError(false);
 
+    if (step === 6 && !image) return; // Prevent next step if no image
+
     if (step === 5 && method === "ai") return; // AI steps are handled separately
 
-    setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 6)));
+    setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 7))); // Update for 7 steps
   };
 
   const handlePrevStep = () => {
@@ -42,11 +45,11 @@ export default function CreatePetitionPage() {
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} libraries={["places"]}>
       <div className="bg-[#E8EBE4] text-[#223843]">
-      <div className="w-full p-6 bg-white shadow-lg">
+        <div className="w-full p-6 bg-white shadow-lg">
           <div className="mb-6 text-center">
-            <p className="text-lg font-semibold">Step {step} of 6</p>
+            <p className="text-lg font-semibold">Step {step} of 7</p>
             <div className="mt-2 h-2 w-full bg-gray-200 rounded">
-              <div className="h-2 bg-[#CA3C25] rounded transition-all" style={{ width: `${(step / 6) * 100}%` }}></div>
+              <div className="h-2 bg-[#CA3C25] rounded transition-all" style={{ width: `${(step / 7) * 100}%` }}></div>
             </div>
           </div>
 
@@ -67,7 +70,8 @@ export default function CreatePetitionPage() {
           {step === 4 && <ContentMethodSelector method={method} setMethod={setMethod} />}
           {step === 5 && method === "ai" && <AIForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
           {step === 5 && method === "manual" && <ManualForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
-          {step === 6 && (
+          {step === 6 && <ImageUpload image={image} setImage={setImage} />}
+          {step === 7 && (
             <ReviewAndPublish
               scope={scope}
               location={location}
@@ -88,7 +92,7 @@ export default function CreatePetitionPage() {
                 </button>
               )}
               <button className="px-4 py-2 bg-[#CA3C25] text-white rounded" onClick={handleNextStep}>
-                Next
+                {step === 7 ? "Publish" : "Next"}
               </button>
             </div>
           )}

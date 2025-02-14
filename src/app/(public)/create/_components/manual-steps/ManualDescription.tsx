@@ -1,11 +1,5 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
-import BulletList from "@tiptap/extension-bullet-list";
-import ListItem from "@tiptap/extension-list-item";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 interface ManualDescriptionProps {
   description: string;
@@ -20,15 +14,6 @@ const ManualDescription: React.FC<ManualDescriptionProps> = ({
   prevStep,
   confirmStep,
 }) => {
-  // Initialize Tiptap Editor
-  const editor = useEditor({
-    extensions: [StarterKit, Bold, Italic, BulletList, ListItem, Link, Image],
-    content: description,
-    onUpdate: ({ editor }) => {
-      setDescription(editor.getHTML());
-    },
-  });
-
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
       {/* Title */}
@@ -38,44 +23,29 @@ const ManualDescription: React.FC<ManualDescriptionProps> = ({
         always edit your petition, even after publishing.
       </p>
 
-      {/* Toolbar */}
-      <div className="mt-4 flex gap-2 border-b pb-2">
-        <button
-          className={`p-2 text-[#223843] rounded-md ${
-            editor?.isActive("bold") ? "bg-gray-300" : ""
-          }`}
-          onClick={() => editor?.chain().focus().toggleBold().run()}
-        >
-          <b>B</b>
-        </button>
-        <button
-          className={`p-2 text-[#223843] rounded-md ${
-            editor?.isActive("italic") ? "bg-gray-300" : ""
-          }`}
-          onClick={() => editor?.chain().focus().toggleItalic().run()}
-        >
-          <i>I</i>
-        </button>
-        <button
-          className="p-2 text-[#223843] rounded-md"
-          onClick={() => editor?.chain().focus().toggleBulletList().run()}
-        >
-          • List
-        </button>
-        <button
-          className="p-2 text-[#223843] rounded-md"
-          onClick={() => {
-            const url = prompt("Enter URL:");
-            if (url) editor?.chain().focus().setLink({ href: url }).run();
+      {/* CKEditor */}
+      <div className="mt-4">
+        <CKEditor
+          editor={ClassicEditor}
+          data={description}
+          onChange={(_, editor) => {
+            setDescription(editor.getData());
           }}
-        >
-          🔗
-        </button>
-      </div>
-
-      {/* Editor */}
-      <div className="mt-2 border border-gray-300 rounded-md p-2 min-h-[150px]">
-        <EditorContent editor={editor} />
+          config={{
+            toolbar: [
+              "bold",
+              "italic",
+              "|",
+              "bulletedList",
+              "numberedList",
+              "|",
+              "link",
+              "imageUpload",
+              "undo",
+              "redo",
+            ],
+          }}
+        />
       </div>
 
       {/* Navigation Buttons */}
