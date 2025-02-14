@@ -26,6 +26,7 @@ export async function POST(req: Request) {
     const userData: IUser = {
       firstname: firstName,
       lastname: lastName,
+      email: email,
       profile_image: "",
       location: "", 
       phone_number: "",
