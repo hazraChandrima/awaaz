@@ -16,7 +16,7 @@ function Navbar() {
           >
             <Image
               src={logo}
-              className="h-[35px] w-[100px] md:h-[70px] md:w-[250px]"
+              className="h-[35px] w-[100px] md:h-[50px] md:w-[190px]"
               alt="site logo"
             />
           </Link>
@@ -104,7 +104,9 @@ function Navbar() {
                   </a>
                 </SignedOut>
                 <SignedOut>
-                  <a className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                  <a 
+                  href="/sign-up"
+                  className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                     Get started
                   </a>
                 </SignedOut>
