@@ -6,7 +6,7 @@ import ScopeSelector from "./_components/ScopeSelector";
 import LocationInput from "./_components/LocationInput";
 import CategorySelector from "./_components/CategorySelector";
 import ContentMethodSelector from "./_components/ContentMethodSelector";
-import ManualForm from "./_components/ManualForm";
+import ManualForm from "./_components/manual-steps/ManualForm";
 import ReviewAndPublish from "./_components/ReviewAndPublish";
 import AIForm from "./_components/ai-steps/AIForm";
 
@@ -27,15 +27,15 @@ export default function CreatePetitionPage() {
       return;
     }
     setLocationError(false);
-    
+
     if (step === 5 && method === "ai") return; // AI steps are handled separately
-    
+
     setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 6)));
   };
 
   const handlePrevStep = () => {
     if (step === 5 && method === "ai") return; // AI steps handled in AIForm
-    
+
     setStep((prev) => (prev === 3 && scope === "Global" ? 1 : Math.max(prev - 1, 1)));
   };
 
@@ -51,20 +51,47 @@ export default function CreatePetitionPage() {
           </div>
 
           {/* Form Steps */}
-          {step === 1 && <ScopeSelector scope={scope} setScope={(val) => { setScope(val); if (val === "Global") setStep(3); }} />}
-          {step === 2 && scope !== "Global" && <LocationInput location={location} setLocation={setLocation} error={locationError} />}
+          {step === 1 && (
+            <ScopeSelector
+              scope={scope}
+              setScope={(val) => {
+                setScope(val);
+                if (val === "Global") setStep(3);
+              }}
+            />
+          )}
+          {step === 2 && scope !== "Global" && (
+            <LocationInput location={location} setLocation={setLocation} error={locationError} />
+          )}
           {step === 3 && <CategorySelector category={category} setCategory={setCategory} />}
           {step === 4 && <ContentMethodSelector method={method} setMethod={setMethod} />}
           {step === 5 && method === "ai" && <AIForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
-          {step === 6 && <ReviewAndPublish scope={scope} location={location} category={category} title={title} description={description} image={image} submitPetition={() => alert("Petition Published!")} />}
+          {step === 5 && method === "manual" && <ManualForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
+          {step === 6 && (
+            <ReviewAndPublish
+              scope={scope}
+              location={location}
+              category={category}
+              title={title}
+              description={description}
+              image={image}
+              submitPetition={() => alert("Petition Published!")}
+            />
+          )}
 
-          {/* Navigation Buttons */}
-          {step !== 5 || method !== "ai" ? (
+          {/* Navigation Buttons (Hidden in ManualForm steps) */}
+          {!(step === 5 && method === "manual") && (
             <div className="mt-6 flex justify-between">
-              {step > 1 && <button className="px-4 py-2 bg-gray-500 text-white rounded" onClick={handlePrevStep}>Back</button>}
-              <button className="px-4 py-2 bg-[#CA3C25] text-white rounded" onClick={handleNextStep}>Next</button>
+              {step > 1 && (
+                <button className="px-4 py-2 bg-gray-500 text-white rounded" onClick={handlePrevStep}>
+                  Back
+                </button>
+              )}
+              <button className="px-4 py-2 bg-[#CA3C25] text-white rounded" onClick={handleNextStep}>
+                Next
+              </button>
             </div>
-          ) : null}
+          )}
         </div>
       </div>
     </LoadScript>
