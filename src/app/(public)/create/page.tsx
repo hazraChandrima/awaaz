@@ -9,7 +9,7 @@ import ContentMethodSelector from "./_components/ContentMethodSelector";
 import ManualForm from "./_components/manual-steps/ManualForm";
 import ReviewAndPublish from "./_components/ReviewAndPublish";
 import AIForm from "./_components/ai-steps/AIForm";
-import ImageUpload from "./_components/ImageUpload"; // New Image Upload Component
+import ImageUpload from "./_components/ImageUpload";
 
 export default function CreatePetitionPage() {
   const [step, setStep] = useState(1);
@@ -20,10 +20,10 @@ export default function CreatePetitionPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null); // ✅ Store uploaded URL
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [locationError, setLocationError] = useState(false);
+  const [goal, setGoal] = useState(1000); // Default petition goal
 
-  // ✅ Updated handleNextStep to allow skipping image upload
   const handleNextStep = () => {
     if (step === 2 && !location.trim() && scope !== "Global") {
       setLocationError(true);
@@ -31,34 +31,43 @@ export default function CreatePetitionPage() {
     }
     setLocationError(false);
 
-    if (step === 5 && method === "ai") return; // AI steps are handled separately
+    if (step === 5 && method === "ai") return;
 
     if (step === 6) {
-      setStep(7); // Always move to Step 7, even if image is missing
+      setStep(7); // Proceed to review even if no image uploaded
       return;
     }
 
-    setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 7))); // Update for 7 steps
+    setStep((prev) =>
+      prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 7)
+    );
   };
 
   const handlePrevStep = () => {
-    if (step === 5 && method === "ai") return; // AI steps handled in AIForm
-
-    setStep((prev) => (prev === 3 && scope === "Global" ? 1 : Math.max(prev - 1, 1)));
+    if (step === 5 && method === "ai") return;
+    setStep((prev) =>
+      prev === 3 && scope === "Global" ? 1 : Math.max(prev - 1, 1)
+    );
   };
 
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} libraries={["places"]}>
-      <div className="bg-[#E8EBE4] text-[#223843]">
-        <div className="w-full p-6 bg-white shadow-lg">
+    <LoadScript
+      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+      libraries={["places"]}
+    >
+      <div className="bg-[#E8EBE4] text-[#223843] min-h-screen flex items-center justify-center">
+        <div className="w-full max-w-3xl p-6 bg-white shadow-lg rounded-lg">
           <div className="mb-6 text-center">
             <p className="text-lg font-semibold">Step {step} of 7</p>
             <div className="mt-2 h-2 w-full bg-gray-200 rounded">
-              <div className="h-2 bg-[#CA3C25] rounded transition-all" style={{ width: `${(step / 7) * 100}%` }}></div>
+              <div
+                className="h-2 bg-[#CA3C25] rounded transition-all"
+                style={{ width: `${(step / 7) * 100}%` }}
+              ></div>
             </div>
           </div>
 
-          {/* Form Steps */}
+          {/* Step Components */}
           {step === 1 && (
             <ScopeSelector
               scope={scope}
@@ -69,14 +78,38 @@ export default function CreatePetitionPage() {
             />
           )}
           {step === 2 && scope !== "Global" && (
-            <LocationInput location={location} setLocation={setLocation} error={locationError} />
+            <LocationInput
+              location={location}
+              setLocation={setLocation}
+              error={locationError}
+            />
           )}
-          {step === 3 && <CategorySelector category={category} setCategory={setCategory} />}
-          {step === 4 && <ContentMethodSelector method={method} setMethod={setMethod} />}
-          {step === 5 && method === "ai" && <AIForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
-          {step === 5 && method === "manual" && <ManualForm setTitle={setTitle} setDescription={setDescription} setStep={setStep} />}
+          {step === 3 && (
+            <CategorySelector category={category} setCategory={setCategory} />
+          )}
+          {step === 4 && (
+            <ContentMethodSelector method={method} setMethod={setMethod} />
+          )}
+          {step === 5 && method === "ai" && (
+            <AIForm
+              setTitle={setTitle}
+              setDescription={setDescription}
+              setStep={setStep}
+            />
+          )}
+          {step === 5 && method === "manual" && (
+            <ManualForm
+              setTitle={setTitle}
+              setDescription={setDescription}
+              setStep={setStep}
+            />
+          )}
           {step === 6 && (
-            <ImageUpload image={image} setImage={setImage} setUploadedImageUrl={setUploadedImageUrl} />
+            <ImageUpload
+              image={image}
+              setImage={setImage}
+              setUploadedImageUrl={setUploadedImageUrl}
+            />
           )}
           {step === 7 && (
             <ReviewAndPublish
@@ -85,20 +118,27 @@ export default function CreatePetitionPage() {
               category={category}
               title={title}
               description={description}
-              image={uploadedImageUrl} // ✅ Pass uploaded image URL
-              submitPetition={() => alert("Petition Published!")}
+              image={uploadedImageUrl} // ✅ Ensure uploaded image URL is passed
+              userId="123456" // Replace with actual user ID logic
+              goal={goal}
             />
           )}
 
-          {/* Navigation Buttons (Hidden in Step 5) */}
+          {/* Navigation Buttons */}
           {step !== 5 && (
             <div className="mt-6 flex justify-between">
               {step > 1 && (
-                <button className="px-4 py-2 bg-gray-500 text-white rounded" onClick={handlePrevStep}>
+                <button
+                  className="px-4 py-2 bg-gray-500 text-white rounded"
+                  onClick={handlePrevStep}
+                >
                   Back
                 </button>
               )}
-              <button className="px-4 py-2 bg-[#CA3C25] text-white rounded" onClick={handleNextStep}>
+              <button
+                className="px-4 py-2 bg-[#CA3C25] text-white rounded"
+                onClick={handleNextStep}
+              >
                 {step === 7 ? "Publish" : "Next"}
               </button>
             </div>

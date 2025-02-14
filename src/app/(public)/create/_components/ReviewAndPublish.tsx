@@ -6,7 +6,9 @@ interface Props {
   category: string;
   title: string;
   description: string;
-  image: File | string | null;
+  image: string | null;
+  userId: string;
+  goal: number;
 }
 
 const ReviewAndPublish: React.FC<Props> = ({
@@ -16,85 +18,65 @@ const ReviewAndPublish: React.FC<Props> = ({
   title,
   description,
   image,
+  userId,
+  goal,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadResponse, setUploadResponse] = useState<string | null>(null);
 
-  // Use ImageKit URL if image is already uploaded
-  const imageUrl = typeof image === "string" ? image : null;
+  const submitPetition = async () => {
+    const missingFields = [];
+    if (!title) missingFields.push("Title");
+    if (!description) missingFields.push("Description");
+    if (!scope) missingFields.push("Scope");
+    if (!userId) missingFields.push("User ID");
+    if (!goal) missingFields.push("Goal");
 
-  // const submitPetition = async () => {
-  //   if (!title || !description) {
-  //     alert("Title and Description are required!");
-  //     return;
-  //   }
-
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const response = await fetch("/api/post-petitions", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         scope,
-  //         location,
-  //         category,
-  //         title,
-  //         description,
-  //         imageUrl,
-  //       }),
-  //     });
-
-  //     const result = await response.json();
-  //     console.log("Server Response:", result);
-  //     setUploadResponse(result.message);
-
-  //     if (response.ok) {
-  //       alert("Petition submitted successfully!");
-  //     } else {
-  //       alert("Failed to submit petition.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting petition:", error);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
-
-const submitPetition = async () => {
-  try {
-    const response = await fetch("/api/post-petitions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        scope,
-        location,
-        category,
-        title,
-        description,
-        imageUrl, // ImageKit URL
-      }),
-    });
-
-    const text = await response.text(); // Get raw response
-
-    console.log("Raw Response:", text); // Debugging: See what the server sends
-
-    if (!response.ok) {
-      throw new Error(
-        `Server Error: ${response.status} - ${response.statusText}`
-      );
+    if (missingFields.length > 0) {
+      alert(`⚠️ Missing required fields: ${missingFields.join(", ")}`);
+      return;
     }
 
-    const data = JSON.parse(text); // Parse JSON manually
-    console.log("Petition submitted successfully:", data);
-  } catch (error) {
-    console.error("Error submitting petition:", error);
-  }
-};
+    setIsSubmitting(true);
+    setUploadResponse(null);
 
+    const petitionData = {
+      title,
+      description,
+      image_url: image,
+      category,
+      scope,
+      userId,
+      location,
+      goal,
+    };
+
+    console.log("📤 Sending petition data:", petitionData);
+
+    try {
+      const response = await fetch("/api/post-petitions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(petitionData),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Server Error: ${response.status} - ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("✅ Successfully posted request to DB:", data);
+
+      setUploadResponse("✅ Petition submitted successfully!");
+    } catch (error) {
+      console.error("❌ Error submitting petition:", error);
+      setUploadResponse("❌ Failed to submit petition. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -108,11 +90,7 @@ const submitPetition = async () => {
       <div className="space-y-3">
         <div className="border-b pb-2">
           <p className="text-lg font-semibold text-[#CA3C25]">Scope</p>
-          <p className="text-gray-700">
-            {scope || (
-              <span className="italic text-gray-500">Not specified</span>
-            )}
-          </p>
+          <p className="text-gray-700">{scope || "Not specified"}</p>
         </div>
 
         {location && (
@@ -124,19 +102,14 @@ const submitPetition = async () => {
 
         <div className="border-b pb-2">
           <p className="text-lg font-semibold text-[#CA3C25]">Category</p>
-          <p className="text-gray-700">
-            {category || (
-              <span className="italic text-gray-500">Not specified</span>
-            )}
-          </p>
+          <p className="text-gray-700">{category || "Not specified"}</p>
         </div>
       </div>
 
-      {/* Image Preview */}
       <div className="mt-6">
-        {imageUrl ? (
+        {image ? (
           <img
-            src={imageUrl}
+            src={image}
             alt="Petition Preview"
             className="mt-2 rounded-lg shadow-md border border-gray-300 w-full object-cover max-h-80"
           />
@@ -151,25 +124,18 @@ const submitPetition = async () => {
         <div className="border-b pb-2">
           <p className="text-lg font-semibold text-[#CA3C25]">Title</p>
           <p className="text-gray-800 font-bold">
-            {title || (
-              <span className="italic text-gray-500">No title provided</span>
-            )}
+            {title || "No title provided"}
           </p>
         </div>
 
         <div>
           <p className="text-lg font-semibold text-[#CA3C25]">Description</p>
           <p className="text-gray-700">
-            {description || (
-              <span className="italic text-gray-500">
-                No description provided
-              </span>
-            )}
+            {description || "No description provided"}
           </p>
         </div>
       </div>
 
-      {/* Submit Button */}
       <div className="mt-6 flex justify-center">
         <button
           className={`px-6 py-3 bg-[#CA3C25] text-white font-semibold rounded-lg shadow-md transition duration-200 ${
@@ -182,7 +148,6 @@ const submitPetition = async () => {
         </button>
       </div>
 
-      {/* Response Message */}
       {uploadResponse && (
         <p className="mt-4 text-center text-green-600">{uploadResponse}</p>
       )}

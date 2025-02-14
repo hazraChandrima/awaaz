@@ -7,7 +7,6 @@ export interface IPetition {
   userId: string;
   location: string;
   goal: number;
-  expiry: Date;
   createdAt: Date;
   updatedAt: Date;
 }
