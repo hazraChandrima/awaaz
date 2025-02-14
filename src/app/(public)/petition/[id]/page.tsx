@@ -1,9 +1,9 @@
-"use client";
+"use client"; // Important to ensure it's a client-side component
 import React, { useState } from "react";
-import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsCheckSquare, BsSquare } from "react-icons/bs";
+import ShareModal from "../_components/ShareModal"; // Assuming your modal component is in the same directory
 
 const petitionData = {
   scope: "National",
@@ -40,10 +40,13 @@ const reasonsForSigning = [
 ];
 
 const PetitionPage = () => {
-  const [signature, setSignature] = useState("");
-  const [isSigned, setIsSigned] = useState(false);
-  const [displayName, setDisplayName] = useState(true);
-  const [activeTab, setActiveTab] = useState("details");
+  const [signature, setSignature] = useState(""); // Signature text
+  const [isSigned, setIsSigned] = useState(false); // Track if signed
+  const [displayName, setDisplayName] = useState(true); // Track name visibility
+  const [activeTab, setActiveTab] = useState("details"); // Tab navigation
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility for share
+
+  const shareUrl = `http://localhost:3000/petition/1234`; // Static URL for this example
 
   return (
     <div className="bg-[#E8EBE4] text-[#223843]">
@@ -69,21 +72,16 @@ const PetitionPage = () => {
 
         {activeTab === "details" ? (
           <>
-            <h1 className="text-[#223843] text-3xl font-bold text-center mt-4 leading-snug">
-              {petitionData.title}
-            </h1>
+            <h1 className="text-[#223843] text-3xl font-bold text-center mt-4 leading-snug">{petitionData.title}</h1>
             <p className="text-center text-sm text-gray-600 mt-2">
               <strong>Scope:</strong> {petitionData.scope} | <strong>Category:</strong> {petitionData.category} | <strong>Location:</strong> {petitionData.location}
             </p>
-            <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:gap-0.1"> {/* Added gap-2.5 for 10px gap */}
+            <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:gap-2.5">
               <div className="lg:w-2/3">
-                <Image
+                <img
                   src={petitionData.image}
                   alt="Baby Sera"
-                  width={700}
-                  height={450}
                   className="rounded-xl shadow-md"
-                  unoptimized={true}
                 />
                 <p className="text-[#223843] mt-4 leading-relaxed text-lg">{petitionData.description}</p>
                 <h2 className="text-[#223843] text-2xl font-bold mt-8">Updates</h2>
@@ -95,20 +93,19 @@ const PetitionPage = () => {
                     </div>
                   ))}
                 </div>
-               
               </div>
 
               {/* Petition Sign Box */}
-              <div className=" bg-white p-6 rounded-xl shadow-md"> {/* This sets the gap between the two components */}
+              <div className="bg-white p-6 rounded-xl shadow-md">
                 <h3 className="text-[#223843] font-bold text-xl">Sign this petition</h3>
                 <div className="text-center">
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-purple-700">{petitionData.currentSignatures.toLocaleString()}</span>
+                    <span className="text-2xl font-bold text-[#CA3C25]">{petitionData.currentSignatures.toLocaleString()}</span>
                     <span className="text-xl font-bold text-gray-600">{petitionData.goalSignatures.toLocaleString()}</span>
                   </div>
                   <div className="w-full bg-gray-300 h-2 rounded-full mt-1">
                     <div
-                      className="bg-purple-700 h-2 rounded-full"
+                      className="bg-[#CA3C25] h-2 rounded-full"
                       style={{ width: `${(petitionData.currentSignatures / petitionData.goalSignatures) * 100}%` }}
                     ></div>
                   </div>
@@ -140,6 +137,7 @@ const PetitionPage = () => {
                   </div>
                   <button
                     className="w-full py-3 mt-4 bg-[#CA3C25] hover:bg-red-700 text-white text-lg font-bold rounded-lg"
+                    onClick={() => setIsModalOpen(true)}
                   >
                     Sign this petition
                   </button>
@@ -164,6 +162,14 @@ const PetitionPage = () => {
           </div>
         )}
       </div>
+
+      {/* Share Modal */}
+      <ShareModal 
+  isOpen={isModalOpen} 
+  onClose={() => setIsModalOpen(false)} 
+  shareUrl={shareUrl} 
+  signatureCount={petitionData.currentSignatures} 
+/>
     </div>
   );
 };
