@@ -24,7 +24,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${armata.className} antialiased`}>
           <Navbar />
-          {children}
+           <main className="max-w-[85rem] mx-auto lg:py-4 ">{children}</main>
           <Footer />
         </body>
         <PrelineScript />
