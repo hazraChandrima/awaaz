@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {Armata } from "next/font/google";
 import PrelineScript from "./components/PrelineScript";
 import "./globals.css";
+import Footer from "./components/footer/Footer";
 
 export const metadata: Metadata = {
   title: "Awaaz",
@@ -21,8 +22,10 @@ export default function RootLayout({
         className={`${armata.className} antialiased`}
       >
         {children}
+        <Footer/>
       </body>
       <PrelineScript/>
+
     </html>
   );
 }
