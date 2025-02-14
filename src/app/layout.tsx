@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import {Armata } from "next/font/google";
 import PrelineScript from "./components/PrelineScript";
 import "./globals.css";
+import Footer from "./components/footer/Footer";
+
 import Navbar from "./components/navbar/Navbar";
 
 export const metadata: Metadata = {
@@ -23,8 +25,10 @@ export default function RootLayout({
       >
         <Navbar/>
         {children}
+        <Footer/>
       </body>
       <PrelineScript/>
+
     </html>
   );
 }
