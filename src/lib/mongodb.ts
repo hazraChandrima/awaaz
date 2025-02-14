@@ -9,6 +9,9 @@ if (!uri) {
   throw new Error('Please add your MongoDB URI to .env');
 }
 
+console.log('Attempting to connect to MongoDB...');
+console.log('Using URI:', uri ? `${uri.slice(0, 20)}...` : 'undefined');
+
 const options = {};
 
 let client: MongoClient;
