@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {Armata } from "next/font/google";
 import PrelineScript from "./components/PrelineScript";
 import "./globals.css";
+import Navbar from "./components/navbar/Navbar";
 
 export const metadata: Metadata = {
   title: "Awaaz",
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body
         className={`${armata.className} antialiased`}
       >
+        <Navbar/>
         {children}
       </body>
       <PrelineScript/>
