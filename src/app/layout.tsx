@@ -3,7 +3,6 @@ import { Armata } from "next/font/google";
 import PrelineScript from "./components/PrelineScript";
 import "./globals.css";
 import Footer from "./components/footer/Footer";
-
 import Navbar from "./components/navbar/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 

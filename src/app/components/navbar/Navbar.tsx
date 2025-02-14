@@ -1,10 +1,12 @@
 "use client";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import logo from "../../../../public/assets/logo.jpeg";
 import Image from "next/image";
 
 function Navbar() {
+  const { isSignedIn, user } = useUser();
+
   return (
     <header className="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200">
       <nav className="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 p-4 sm:px-6 lg:px-8">
@@ -16,7 +18,7 @@ function Navbar() {
           >
             <Image
               src={logo}
-              className="h-[35px] w-[100px] md:h-[70px] md:w-[250px]"
+              className="h-[35px] w-[100px] md:h-[50px] md:w-[190px]"
               alt="site logo"
             />
           </Link>
@@ -33,8 +35,8 @@ function Navbar() {
             <svg
               className="hs-collapse-open:hidden size-4"
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -49,8 +51,8 @@ function Navbar() {
             <svg
               className="hs-collapse-open:block shrink-0 hidden size-4"
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -104,10 +106,25 @@ function Navbar() {
                   </a>
                 </SignedOut>
                 <SignedOut>
-                  <a className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+                  <a 
+                    href="/sign-up"
+                    className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                     Get started
                   </a>
                 </SignedOut>
+                <SignedIn>
+                  <div className="flex items-center gap-2">
+                    <UserButton
+                      appearance={{
+                        elements: {
+                          userButtonAvatarBox: "h-8 w-8",
+                          userButtonPopoverCard: "shadow-lg rounded-lg",
+                          userButtonPopoverActionButton: "hover:bg-gray-100"
+                        }
+                      }}
+                    />
+                  </div>
+                </SignedIn>
               </div>
             </div>
           </div>
