@@ -1,4 +1,5 @@
 export interface IPetition {
+  id?:string;
   title: string;
   description: string;
   image_url: string;
@@ -7,7 +8,6 @@ export interface IPetition {
   userId: string;
   location: string;
   goal: number;
-  expiry: Date;
   createdAt: Date;
   updatedAt: Date;
 }
