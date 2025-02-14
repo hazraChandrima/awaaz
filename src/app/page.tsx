@@ -1,6 +1,8 @@
 "use client";
 
 import { Abhaya_Libre } from "next/font/google";
+import Vision from "./(public)/home/page";
+import Link from "next/link";
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
 
@@ -25,9 +27,14 @@ export default function Home() {
               corrupti, nobis vero quos? Nisi mollitia natus tempora quam
               suscipit libero quae doloribus.
             </p>
+            <div className="flex space-x-4 mt-2">
+            <button className="py-3 px-4 inline-flex items-center font-semibold text-sm rounded-md border border-[#CA3C25] text-[#CA3C25] bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">Get Started</button>
+            <Link href={'/create'} className="py-3 px-4 inline-flex items-center font-semibold text-sm rounded-md bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">Create Petition</Link>
+            </div>
           </div>
         </div>
       </div>
+          <Vision/>
     </>
   );
 }

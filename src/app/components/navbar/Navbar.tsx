@@ -88,6 +88,12 @@ function Navbar() {
                   >
                     Browse
                   </Link>
+                  <Link
+                    href="/dashboard/creator"
+                    className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
+                  >
+                    Dashboard
+                  </Link>
                 </div>
               </div>
 
