@@ -1,8 +1,8 @@
 "use client";
 
 import { Abhaya_Libre } from "next/font/google";
-import Vision from "./(public)/home/page";
 import Link from "next/link";
+import Carousel from "./components/Carousel";
 import RotatingText from "./components/effects/RotateText";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
@@ -21,7 +21,7 @@ export default function Home() {
       return () => unsubscribe();
     }, []);
   return (
-    <>
+    <div>
       <div className="bg-[#E8EBE4]">
         <div className="max-w-5xl mx-auto px-4 xl:px-0 pt-24 lg:pt-32 pb-24">
           <h1 className="flex items-center font-semibold text-[#223843] text-5xl md:text-6xl">
@@ -66,7 +66,11 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <Vision />
-    </>
+
+      {/* Carousel Section */}
+      <div className="w-full mt-12 px-6">
+        <Carousel />
+      </div>
+    </div>
   );
 }

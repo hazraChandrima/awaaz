@@ -2,45 +2,60 @@
 import { useState, useEffect } from "react";
 import PetitionList from "./_components/PetitionList";
 import BrowseFilters from "./_components/BrowseFilters";
-
-const petitionsData = [
-  {
-    id: 1,
-    title: "Rare diseases policy fund not utilised by GOI...",
-    description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet, a esse reiciendis fuga, placeat itaque repudiandae laboriosam molestiae laudantium voluptates, corrupti minima impedit possimus consectetur ullam exercitationem officiis sequi blanditiis repellat dolorem temporibus! Labore eveniet hic quam tempore voluptatem quaerat consequuntur, unde, consectetur harum nulla excepturi. Officia vero quia ducimus facilis cupiditate inventore dolorem voluptatibus dolorum unde, eum doloremque ullam, tempore corrupti obcaecati quibusdam ea saepe excepturi expedita error explicabo illum deserunt. Tenetur excepturi delectus odio omnis ipsum eius laborum aut error quibusdam, animi eligendi, molestiae numquam eos eum! Ea, reiciendis aut quam quidem excepturi quae eum omnis blanditiis nihil.",
-    author: "Michael Andrews",
-    signatures: 76502,
-    date: "16/09/23",
-    image: "img/cardimage1.png",
-  },
-  {
-    id: 2,
-    title: "Revise Tax Deductions under 80DD...",
-    description:" Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet, a esse reiciendis fuga, placeat itaque repudiandae laboriosam molestiae laudantium voluptates, corrupti minima impedit possimus consectetur ullam exercitationem officiis sequi blanditiis repellat dolorem temporibus! Labore eveniet hic quam tempore voluptatem quaerat consequuntur, unde, consectetur harum nulla excepturi. Officia vero quia ducimus facilis cupiditate inventore dolorem voluptatibus dolorum unde, eum doloremque ullam, tempore corrupti obcaecati quibusdam ea saepe excepturi expedita error explicabo illum deserunt. Tenetur excepturi delectus odio omnis ipsum eius laborum aut error quibusdam, animi eligendi, molestiae numquam eos eum! Ea, reiciendis aut quam quidem excepturi quae eum omnis blanditiis nihil.",
-    author: "Poonam D",
-    signatures: 47473,
-    date: "30/09/23",
-    image: "/images/disability-tax.jpg",
-  },
-];
+import { IPetition } from "@/interfaces/Petition";
 
 export default function BrowsePage() {
   const [activeTab, setActiveTab] = useState<string>("featured");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredPetitions, setFilteredPetitions] = useState(petitionsData);
+  const [petitions, setPetitions] = useState<IPetition[]>([]);
+  const [filteredPetitions, setFilteredPetitions] = useState<IPetition[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Filter as the user types
+  // Fetch petitions on mount
+  useEffect(() => {
+    const fetchPetitions = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/petitions");
+        if (!response.ok) throw new Error("Failed to fetch petitions");
+
+        const data = await response.json();
+
+        if (Array.isArray(data.petitions)) {
+          setPetitions(data.petitions);
+          setFilteredPetitions(data.petitions);
+        } else {
+          throw new Error("Unexpected API response format");
+        }
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPetitions();
+  }, []);
+
+  // Filter petitions when the search query changes
   useEffect(() => {
     applyFilter();
   }, [searchQuery]);
 
-  // Function to apply filtering when the button is clicked
   const applyFilter = () => {
-    const newFiltered = petitionsData.filter((petition) =>
+    const newFiltered = petitions.filter((petition) =>
       petition.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredPetitions(newFiltered);
   };
+
+  if (loading) return <p className="text-center">Loading petitions...</p>;
+  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
     <div className="lg:px-20">
@@ -52,7 +67,7 @@ export default function BrowsePage() {
         setActiveTab={setActiveTab}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        applyFilter={applyFilter} // ✅ Pass applyFilter for button click
+        applyFilter={applyFilter}
       />
 
       {/* Petition List */}

@@ -1,10 +1,13 @@
 export interface Petition {
-    id: number;
-    title: string;
-    description: string;
-    author: string;
-    signatures: number;
-    date: string;
-    image: string;
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  location: string;
+  category: string;
+  goal: number;
+  scope: string;
+  userId: string;
+  createdAt: { seconds: number; nanoseconds: number };
+  updatedAt: { seconds: number; nanoseconds: number };
 }
-  
