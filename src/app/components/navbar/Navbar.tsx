@@ -3,21 +3,15 @@
 import Link from "next/link";
 import logo from "../../../../public/assets/logo.jpeg";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { auth } from "@/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { useUser } from "../context/UserContext";
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const {currentUser} = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoggedIn(!!user);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -115,7 +109,7 @@ function Navbar() {
                   >
                     Browse
                   </Link>
-                  {isLoggedIn && (
+                  {currentUser && (
                     <Link
                       href="/dashboard/creator"
                       className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
@@ -132,7 +126,7 @@ function Navbar() {
               </div>
 
               <div className="flex flex-wrap items-center gap-x-1.5">
-                {isLoggedIn ? (
+                {currentUser ? (
                   <button
                     onClick={handleLogout}
                     className="py-[7px] px-2.5 inline-flex items-center font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"

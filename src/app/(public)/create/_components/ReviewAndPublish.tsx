@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import {auth} from "@/firebase";
+import useCurrentUser from "@/app/components/hooks/CurrentUser";
 
 interface Props {
   scope: string;
@@ -18,9 +20,9 @@ const ReviewAndPublish: React.FC<Props> = ({
   title,
   description,
   image,
-  userId,
   goal,
 }) => {
+  const {currentUser, loading} = useCurrentUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadResponse, setUploadResponse] = useState<string | null>(null);
 
@@ -29,7 +31,6 @@ const ReviewAndPublish: React.FC<Props> = ({
     if (!title) missingFields.push("Title");
     if (!description) missingFields.push("Description");
     if (!scope) missingFields.push("Scope");
-    if (!userId) missingFields.push("User ID");
     if (!goal) missingFields.push("Goal");
 
     if (missingFields.length > 0) {
@@ -37,6 +38,10 @@ const ReviewAndPublish: React.FC<Props> = ({
       return;
     }
 
+    if (!currentUser){
+      alert(`⚠️ User is not authenticated`);
+      return;
+    }
     setIsSubmitting(true);
     setUploadResponse(null);
 
@@ -46,7 +51,7 @@ const ReviewAndPublish: React.FC<Props> = ({
       image_url: image,
       category,
       scope,
-      userId,
+      userId: currentUser.uid,
       location,
       goal,
     };

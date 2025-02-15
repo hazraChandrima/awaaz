@@ -1,73 +1,128 @@
 "use client";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import Link from "next/link";
+import { useState } from "react";
+import Image from "next/image";
+import { FaUsers, FaEnvelope, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const dummyData = [
+const petitionData = [
   {
     id: 1,
     title: 'Place "Zero Tolerance for Sexual Harassment" Board on IIIT Delhi Campus',
     description:
       "Pragya Sikka's petition, signed by 8,229 supporters, led to the ICC at IIIT-Delhi proactively taking steps to build a safer campus for all students.",
     image: "/assets/1.jpeg",
-    supporters: 8222,
-    link: "#",
+    user: { name: "Pragya Sikka", country: "India" },
+    supporters: 8229,
+    createdAt: "12/01/24",
   },
   {
     id: 2,
     title: "Justice for Illegal Arrest of Innocent Indian Citizens by Nigerian Naval Forces",
     description: "Seeking justice for arrested Indian citizens in Nigeria.",
     image: "/assets/2.jpeg",
-    supporters: 5000,
-    link: "#",
+    user: { name: "Rahul Sharma", country: "India" },
+    supporters: 10456,
+    createdAt: "28/11/23",
   },
   {
     id: 3,
     title: "Petition to Ministry of Sports to Enable U23 Football Team to Participate in Asian Games.",
     description: "Government needs to allow the U23 Football team to participate in the Asian Games.",
     image: "/assets/3.jpeg",
-    supporters: 10000,
-    link: "#",
+    user: { name: "Amit Kumar", country: "India" },
+    supporters: 15230,
+    createdAt: "03/02/24",
   },
 ];
 
-export default function Carousel() {
+export default function CustomCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const nextSlide = () => {
+    setActiveIndex((prev) => (prev + 1) % petitionData.length);
+  };
+
+  const prevSlide = () => {
+    setActiveIndex((prev) => (prev - 1 + petitionData.length) % petitionData.length);
+  };
+
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        navigation
-        pagination={{ clickable: true }}
-        autoplay={{ delay: 5000 }}
-        loop
-        spaceBetween={20}
-        slidesPerView={1}
-        className="rounded-lg shadow-md"
-      >
-        {dummyData.map((item) => (
-          <SwiperSlide key={item.id}>
-            <div className="relative">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-64 object-cover rounded-lg"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-4 rounded-lg">
-                <h3 className="text-white text-lg font-semibold">{item.title}</h3>
-                <p className="text-gray-200 text-sm">{item.description}</p>
-                <div className="text-gray-300 mt-2">{item.supporters} Supporters</div>
-                <Link href={item.link} className="text-blue-300 mt-2">
-                  Learn More
-                </Link>
+    <div className="relative w-full">
+      {/* Petition Card Container */}
+      <div className="relative w-full min-h-[260px] overflow-hidden rounded-none shadow-lg group">
+        {/* Background Image */}
+        <Image
+          src={petitionData[activeIndex].image}
+          alt={petitionData[activeIndex].title}
+          layout="fill"
+          className="object-cover w-full h-full transition-opacity group-hover:opacity-90"
+        />
+
+        {/* Content Overlay with Hover Dark Effect */}
+        <div className="absolute inset-0 flex flex-col justify-end p-10 bg-gradient-to-t from-black/70 group-hover:from-black/80 transition-all duration-300">
+          {/* Title */}
+          <h3 className="text-white text-2xl font-bold">{petitionData[activeIndex].title}</h3>
+
+          {/* Description */}
+          <p className="text-gray-200 text-lg mt-3 line-clamp-3">
+            {petitionData[activeIndex].description}
+          </p>
+
+          {/* User Info */}
+          <div className="flex items-center gap-5 mt-5 text-white">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                <span className="text-gray-700 font-bold">
+                  {petitionData[activeIndex].user.name[0]}
+                </span>
+              </div>
+              <div>
+                <p className="font-medium text-xl">{petitionData[activeIndex].user.name}</p>
+                <p className="text-gray-300 text-sm">{petitionData[activeIndex].user.country}</p>
               </div>
             </div>
-          </SwiperSlide>
+          </div>
+
+          {/* Stats */}
+          <div className="flex justify-between items-center mt-4 text-gray-300 text-lg">
+            <div className="flex items-center gap-2">
+              <FaUsers />
+              <span>{petitionData[activeIndex].supporters.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <FaEnvelope />
+              <span>{petitionData[activeIndex].createdAt}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Dots */}
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
+        {petitionData.map((_, i) => (
+          <button
+            key={i}
+            className={`h-2 rounded-2xl transition-all ${
+              activeIndex === i ? "w-12 bg-white" : "w-6 bg-white/50"
+            }`}
+            onClick={() => setActiveIndex(i)}
+          />
         ))}
-      </Swiper>
+      </div>
+
+      {/* Navigation Buttons (React Icons) */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-10 top-1/2 -translate-y-1/2 bg-black/60 text-white p-4 rounded-full hover:bg-black/80 transition flex items-center"
+      >
+        <FaChevronLeft size={16} />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute right-10 top-1/2 -translate-y-1/2 bg-black/60 text-white p-4 rounded-full hover:bg-black/80 transition flex items-center"
+      >
+        <FaChevronRight size={16} />
+      </button>
     </div>
   );
 }

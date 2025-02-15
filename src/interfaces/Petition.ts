@@ -8,6 +8,7 @@ export interface IPetition {
   userId: string;
   location: string;
   goal: number;
-  createdAt: Date;
-  updatedAt: Date;
+  signed_users: string[];
+  createdAt: { seconds: number; nanoseconds: number };
+  updatedAt: { seconds: number; nanoseconds: number };
 }

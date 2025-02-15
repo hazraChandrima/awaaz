@@ -33,6 +33,7 @@ export async function POST(req: Request) {
       scope,
       userId,
       location,
+      signed_users:[],
       goal,
       createdAt: new Date(),
       updatedAt: new Date(),
