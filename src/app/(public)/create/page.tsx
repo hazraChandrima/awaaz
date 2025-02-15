@@ -12,24 +12,23 @@ import AIForm from "./_components/ai-steps/AIForm";
 import ImageUpload from "./_components/ImageUpload";
 
 export default function CreatePetitionPage() {
-  const [step, setStep] = useState<number | null>(null);
-  const [scope, setScope] = useState("");
-  const [location, setLocation] = useState("");
-  const [category, setCategory] = useState("");
+  const [step, setStep] = useState<number>(1);
+  const [scope, setScope] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
   const [method, setMethod] = useState<"manual" | "ai" | "">("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
-  const [locationError, setLocationError] = useState(false);
-  const [goal, setGoal] = useState(1000); // Default petition goal
-  const [loading, setLoading] = useState(true); // Ensure loader appears immediately
+  const [locationError, setLocationError] = useState<boolean>(false);
+  const [goal, setGoal] = useState<number>(1000);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Show loading animation immediately
     setTimeout(() => {
-      setLoading(false); // Hide loader
-      setStep(1); // Then show step 1
+      setLoading(false);
+      setStep(1);
     }, 1500);
   }, []);
 
@@ -43,20 +42,16 @@ export default function CreatePetitionPage() {
     if (step === 5 && method === "ai") return;
 
     if (step === 6) {
-      setStep(7); // Proceed to review even if no image uploaded
+      setStep(7);
       return;
     }
 
-    setStep((prev) =>
-      prev === 1 && scope === "Global" ? 3 : Math.min(prev! + 1, 7)
-    );
+    setStep((prev) => (prev === 1 && scope === "Global" ? 3 : Math.min(prev + 1, 7)));
   };
 
   const handlePrevStep = () => {
     if (step === 5 && method === "ai") return;
-    setStep((prev) =>
-      prev === 3 && scope === "Global" ? 1 : Math.max(prev! - 1, 1)
-    );
+    setStep((prev) => (prev === 3 && scope === "Global" ? 1 : Math.max(prev - 1, 1)));
   };
 
   return (
@@ -65,10 +60,7 @@ export default function CreatePetitionPage() {
       libraries={["places"]}
     >
       <div className="w-full p-6 bg-white shadow-lg">
-            <div className="mb-6 text-center">
-
-
-          {/* Loader */}
+        <div className="mb-6 text-center">
           {loading ? (
             <div className="flex flex-col items-center">
               <div className="mt-10 w-12 h-12 border-4 border-[#CA3C25] border-t-transparent rounded-full animate-spin"></div>
@@ -81,16 +73,15 @@ export default function CreatePetitionPage() {
                 <div className="mt-2 h-2 w-full bg-gray-200 rounded">
                   <div
                     className="h-2 bg-[#CA3C25] rounded transition-all"
-                    style={{ width: `${(step! / 7) * 100}%` }}
+                    style={{ width: `${(step / 7) * 100}%` }}
                   ></div>
                 </div>
               </div>
 
-              {/* Step Components */}
               {step === 1 && (
                 <ScopeSelector
                   scope={scope}
-                  setScope={(val) => {
+                  setScope={(val: string) => {
                     setScope(val);
                     if (val === "Global") setStep(3);
                   }}
@@ -137,13 +128,12 @@ export default function CreatePetitionPage() {
                   category={category}
                   title={title}
                   description={description}
-                  image={uploadedImageUrl} // ✅ Ensure uploaded image URL is passed
-                  userId="123456" // Replace with actual user ID logic
+                  image={uploadedImageUrl}
+                  userId="123456"
                   goal={goal}
                 />
               )}
 
-              {/* Navigation Buttons */}
               {step !== 5 && (
                 <div className="mt-6 flex justify-between">
                   {step > 1 && (

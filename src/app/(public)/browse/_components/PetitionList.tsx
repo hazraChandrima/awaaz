@@ -1,10 +1,11 @@
 import React from "react";
 import PetitionCard from "./PetitionCard";
 import { Petition } from "../types";
+import { IPetition } from "@/interfaces/Petition";
 
 
 interface PetitionListProps {
-  petitions: Petition[];
+  petitions: IPetition[];
 }
 
 const PetitionList: React.FC<PetitionListProps> = ({ petitions }) => {

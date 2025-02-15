@@ -6,11 +6,29 @@ import Carousel from "./components/Carousel";
 import RotatingText from "./components/effects/RotateText";
 import useCurrentUser from "./components/hooks/CurrentUser";
 import LocationChecker from "./components/LocationChecker";  // Import the LocationChecker
+import { useEffect, useState } from "react";
+import { auth } from "@/firebase";
+import { User, onAuthStateChanged } from "firebase/auth";
+
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
 
 export default function Home() {
   const { currentUser, loading } = useCurrentUser();
+   const [currentUser, setCurrentUser] = useState<User|null>(null);
+  
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setCurrentUser(user); 
+        } else {
+          setCurrentUser(null);
+        }
+      });
+  
+      return () => unsubscribe();
+    }, []);
+
   return (
     <div>
       <div className="bg-[#E8EBE4]">
@@ -67,6 +85,7 @@ export default function Home() {
       </div>
 
       {/* Carousel Section */}
+
       <div className="w-full mt-12 px-6">
         <Carousel />
       </div>

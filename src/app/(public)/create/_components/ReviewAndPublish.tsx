@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import {auth} from "@/firebase";
-import useCurrentUser from "@/app/components/hooks/CurrentUser";
+import { auth } from "@/firebase";
+import { User, onAuthStateChanged } from "firebase/auth";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   scope: string;
@@ -22,9 +22,21 @@ const ReviewAndPublish: React.FC<Props> = ({
   image,
   goal,
 }) => {
-  const {currentUser, loading} = useCurrentUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadResponse, setUploadResponse] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<User|null>(null);
+  
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setCurrentUser(user); 
+        } else {
+          setCurrentUser(null);
+        }
+      });
+  
+      return () => unsubscribe();
+    }, []);
 
   const submitPetition = async () => {
     const missingFields = [];

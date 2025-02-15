@@ -3,15 +3,25 @@
 import Link from "next/link";
 import logo from "../../../../public/assets/logo.jpeg";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "@/firebase";
-import { signOut } from "firebase/auth";
-import useCurrentUser from "../hooks/CurrentUser";
+import { signOut, onAuthStateChanged, User } from "firebase/auth";
 
 function Navbar() {
-  const {currentUser, loading} = useCurrentUser();
+  const [currentUser, setCurrentUser] = useState<User|null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user); 
+      } else {
+        setCurrentUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleLogout = async () => {
     try {

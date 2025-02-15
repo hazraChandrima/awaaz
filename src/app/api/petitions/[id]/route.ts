@@ -3,12 +3,17 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { IPetition } from "@/interfaces/Petition";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   try {
-    const { id } = params;
+    const url = new URL(request.url);
+    const id = url.pathname.split("/").pop(); 
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Petition ID is required" },
+        { status: 400 }
+      );
+    }
 
     const docRef = doc(db, "petitions", id);
     const docSnap = await getDoc(docRef);

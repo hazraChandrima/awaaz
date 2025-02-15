@@ -7,33 +7,22 @@ import { IPetition } from "@/interfaces/Petition";
 export default function BrowsePage() {
   const [activeTab, setActiveTab] = useState<string>("featured");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [petitions, setPetitions] = useState<IPetition[]>([]);
-  const [filteredPetitions, setFilteredPetitions] = useState<IPetition[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [petitions, setPetitions] = useState([]);
+  const [filteredPetitions, setFilteredPetitions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch petitions on mount
   useEffect(() => {
     const fetchPetitions = async () => {
       try {
-        setLoading(true);
         const response = await fetch("/api/petitions");
         if (!response.ok) throw new Error("Failed to fetch petitions");
-
         const data = await response.json();
-
-        if (Array.isArray(data.petitions)) {
-          setPetitions(data.petitions);
-          setFilteredPetitions(data.petitions);
-        } else {
-          throw new Error("Unexpected API response format");
-        }
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred");
-        }
+        console.log(data);
+        setPetitions(data.petitions);
+        setFilteredPetitions(data.petitions);
+      } catch (err: any) {
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -42,13 +31,12 @@ export default function BrowsePage() {
     fetchPetitions();
   }, []);
 
-  // Filter petitions when the search query changes
   useEffect(() => {
     applyFilter();
   }, [searchQuery]);
 
   const applyFilter = () => {
-    const newFiltered = petitions.filter((petition) =>
+    const newFiltered = petitions.filter((petition:IPetition) =>
       petition.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredPetitions(newFiltered);
@@ -61,7 +49,6 @@ export default function BrowsePage() {
     <div className="lg:px-20">
       <h1 className="text-3xl font-bold mb-4">Discover Petitions to Sign</h1>
 
-      {/* Tabs and Search Filter */}
       <BrowseFilters
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -70,7 +57,6 @@ export default function BrowsePage() {
         applyFilter={applyFilter}
       />
 
-      {/* Petition List */}
       <div className="mt-6">
         <PetitionList petitions={filteredPetitions} />
       </div>
