@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import PetitionList from "./_components/PetitionList";
 import BrowseFilters from "./_components/BrowseFilters";
@@ -36,17 +36,13 @@ export default function BrowsePage() {
   }, [searchQuery]);
 
   const applyFilter = () => {
-    const newFiltered = petitions.filter((petition: IPetition) =>
+    const newFiltered = petitions.filter((petition:IPetition) =>
       petition.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredPetitions(newFiltered);
   };
 
-  if (loading) return (
-    <div className="text-center">
-      <div className="border-t-4 border-red-500 border-solid rounded-full w-16 h-16 animate-spin mx-auto"></div>
-    </div>
-  );
+  if (loading) return <p className="text-center">Loading petitions...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
