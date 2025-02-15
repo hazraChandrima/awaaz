@@ -30,15 +30,14 @@ interface PetitionData {
 
 const PetitionPage = () => {
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
-  const [signature, setSignature] = useState(""); // Signature text
-  const [displayName, setDisplayName] = useState(true); // Track name visibility
-  const [activeTab, setActiveTab] = useState("details"); // Tab navigation
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility for share
+  const [signature, setSignature] = useState("");
+  const [displayName, setDisplayName] = useState(true);
+  const [activeTab, setActiveTab] = useState("details"); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const {currentUser}  = useUser();
 
-  const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ''}`; // Dynamic URL
-
-  // Fetch petition data
+  const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ''}`;
+  
   useEffect(() => {
     const fetchPetitionData = async () => {
       try {
@@ -55,8 +54,7 @@ const PetitionPage = () => {
     fetchPetitionData();
   }, []);
 
-  if (!petitionData) return <div>Loading...</div>; // Return loading state while fetching data
-
+  if (!petitionData) return <div>Loading...</div>;
   return (
     <div className="bg-[#E8EBE4] text-[#223843]">
       <div className="w-full p-6 bg-white shadow-lg">

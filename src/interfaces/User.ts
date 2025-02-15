@@ -1,6 +1,8 @@
 export type UserRole = "admin" | "user";
 
 export interface IUser {
+  id?: string;
+  role: "user" | "admin";
   firstname: string;
   lastname: string;
   email: string;
