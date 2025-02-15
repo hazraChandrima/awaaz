@@ -7,33 +7,23 @@ import { IPetition } from "@/interfaces/Petition";
 export default function BrowsePage() {
   const [activeTab, setActiveTab] = useState<string>("featured");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [petitions, setPetitions] = useState<IPetition[]>([]);
-  const [filteredPetitions, setFilteredPetitions] = useState<IPetition[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [petitions, setPetitions] = useState([]);
+  const [filteredPetitions, setFilteredPetitions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch petitions on mount
   useEffect(() => {
     const fetchPetitions = async () => {
       try {
-        setLoading(true);
         const response = await fetch("/api/petitions");
         if (!response.ok) throw new Error("Failed to fetch petitions");
-
         const data = await response.json();
-
-        if (Array.isArray(data.petitions)) {
-          setPetitions(data.petitions);
-          setFilteredPetitions(data.petitions);
-        } else {
-          throw new Error("Unexpected API response format");
-        }
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred");
-        }
+        console.log(data);
+        setPetitions(data.petitions);
+        setFilteredPetitions(data.petitions);
+      } catch (err: any) {
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -48,7 +38,7 @@ export default function BrowsePage() {
   }, [searchQuery]);
 
   const applyFilter = () => {
-    const newFiltered = petitions.filter((petition) =>
+    const newFiltered = petitions.filter((petition:IPetition) =>
       petition.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredPetitions(newFiltered);

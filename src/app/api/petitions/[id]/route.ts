@@ -10,6 +10,13 @@ export async function GET(
   try {
     const { id } = params;
 
+    if (!id) {
+      return NextResponse.json(
+        { error: "Petition ID is required" },
+        { status: 400 }
+      );
+    }
+
     const docRef = doc(db, "petitions", id);
     const docSnap = await getDoc(docRef);
 
