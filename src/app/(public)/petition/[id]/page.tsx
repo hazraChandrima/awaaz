@@ -5,7 +5,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsCheckSquare, BsSquare } from "react-icons/bs";
 import ShareModal from "../_components/ShareModal"; 
-import { useUser } from "@/app/components/context/UserContext";
+import { auth } from "@/firebase";
+import { User, onAuthStateChanged } from "firebase/auth";
 
 interface PetitionData {
   signed_users: string[];
@@ -34,7 +35,19 @@ const PetitionPage = () => {
   const [displayName, setDisplayName] = useState(true);
   const [activeTab, setActiveTab] = useState("details"); 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {currentUser}  = useUser();
+  const [currentUser, setCurrentUser] = useState<User|null>(null);
+  
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setCurrentUser(user); 
+        } else {
+          setCurrentUser(null);
+        }
+      });
+  
+      return () => unsubscribe();
+    }, []);
 
   const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ''}`;
   

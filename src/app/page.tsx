@@ -7,6 +7,7 @@ import RotatingText from "./components/effects/RotateText";
 import { useEffect, useState } from "react";
 import { auth } from "@/firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
+import LocationComponent from "@/app/components/LocationComponent";
 
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
