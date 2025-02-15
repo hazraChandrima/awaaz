@@ -46,19 +46,19 @@ const PetitionPage = ({ params }: PageProps) => {
   const [isSigning, setIsSigning] = useState(false);
   const [signatureError, setSignatureError] = useState("");
   const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);  // Add a loading state
   
-  
-    useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setCurrentUser(user); 
-        } else {
-          setCurrentUser(null);
-        }
-      });
-  
-      return () => unsubscribe();
-    }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user); 
+      } else {
+        setCurrentUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ''}`;
   
@@ -70,31 +70,38 @@ const PetitionPage = ({ params }: PageProps) => {
         );
         const data = await response.json();
         setPetitionData(data);
+        setIsLoading(false);  // Set loading to false once data is fetched
       } catch (error) {
         console.error("Error fetching petition data:", error);
+        setIsLoading(false);  // Set loading to false in case of an error
       }
     };
 
     fetchPetitionData();
   }, [params.id]);
 
-  if (!petitionData) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="text-center">
+        <div className="border-t-4 border-red-500 border-solid rounded-full w-16 h-16 animate-spin mx-auto"></div>
+      </div>
+    );
+  }
+
+  if (!petitionData) return <div>Error loading petition data...</div>;
+
   return (
     <div className="bg-[#E8EBE4] text-[#223843]">
       <div className="w-full p-6 bg-white shadow-lg">
         <div className="flex border-b">
           <button
-            className={`py-2 px-6 text-lg font-semibold ${
-              activeTab === "details" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"
-            }`}
+            className={`py-2 px-6 text-lg font-semibold ${activeTab === "details" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"}`}
             onClick={() => setActiveTab("details")}
           >
             Petition Details
           </button>
           <button
-            className={`py-2 px-6 text-lg font-semibold ${
-              activeTab === "comments" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"
-            }`}
+            className={`py-2 px-6 text-lg font-semibold ${activeTab === "comments" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"}`}
             onClick={() => setActiveTab("comments")}
           >
             Comments

@@ -22,7 +22,7 @@ export default function CreatePetitionPage() {
   const [image, setImage] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [locationError, setLocationError] = useState<boolean>(false);
-  const [goal, setGoal] = useState<number>(1000);
+  const [goal, setGoal] = useState<number>(100);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -62,10 +62,9 @@ export default function CreatePetitionPage() {
       <div className="w-full p-6 bg-white shadow-lg">
         <div className="mb-6 text-center">
           {loading ? (
-            <div className="flex flex-col items-center">
-              <div className="mt-10 w-12 h-12 border-4 border-[#CA3C25] border-t-transparent rounded-full animate-spin"></div>
-              <p className="mt-10 text-lg font-semibold text-[#223843]">Loading...</p>
-            </div>
+            <div className="text-center">
+            <div className="border-t-4 border-red-500 border-solid rounded-full w-16 h-16 animate-spin mx-auto"></div>
+          </div>
           ) : (
             <>
               <div className="mb-6 text-center">
