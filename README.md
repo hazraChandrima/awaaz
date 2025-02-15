@@ -13,6 +13,8 @@ Your voice has the power to spark change. Awaaz empowers individuals and communi
 - **Animations**: Framer Motion
 - **Graphs & Charts**: Recharts.js
 - **CDN & Image Optimization**: Imagekit.io
+- **AI Petition Generation**: Using Gemini AI api
+
 
 ## Key Features ✨
 
@@ -24,6 +26,7 @@ Your voice has the power to spark change. Awaaz empowers individuals and communi
 6. **Geolocation-Based Petitions** 🌍: Only allow users in relevant regions to sign petitions based on their IP address or GPS location (HTML5 Geolocation API).
 7. **Role-Based Access Control (RBAC)** 🛡️: Different user roles: Petition Creators, Signers, Moderators, and Government/NGO Officials with custom dashboards.
 8. **Server-Side Rendering (SSR) & SEO Optimization** ⚡: Ensures fast load times and improved search engine rankings.
+9. **Automated AI Petition Generator** ⚡: To automatically generate an entire petition for you with just a prompt
 
 ## Getting Started 🚀
 
