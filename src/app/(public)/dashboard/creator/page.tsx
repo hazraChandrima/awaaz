@@ -15,8 +15,17 @@ import {
 } from "recharts";
 import { auth } from "../../../../firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../../../../firebase";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { FaTrash } from "react-icons/fa6";
+
 
 const Dashboard = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -37,9 +46,47 @@ const Dashboard = () => {
     return () => unsubscribeAuth();
   }, []);
 
+
   useEffect(() => {
     if (!currentUser) return;
-    
+    const q = query(
+      collection(db, "petitions"),
+      where("userId", "==", currentUser.uid)
+    );
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot) => {
+        const petitions = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setPetitionData(petitions);
+      },
+      (error) => {
+        setError("Failed to fetch petitions");
+        console.error("Error fetching petitions:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [currentUser]);
+
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "petitions", id));
+      setPetitionData((prevData) =>
+        prevData.filter((petition) => petition.id !== id)
+      );
+    } catch (err) {
+      console.error("Error deleting petition:", err);
+      setError("Failed to delete petition");
+    }
+  };
+
+
+  useEffect(() => {
+    if (!currentUser) return;
     const q = query(collection(db, "petitions"), where("userId", "==", currentUser.uid));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const petitions = querySnapshot.docs.map(doc => ({
@@ -158,14 +205,21 @@ const Dashboard = () => {
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="signatures" stroke="#2563eb" strokeWidth={2} />
+              <Line
+                type="monotone"
+                dataKey="signatures"
+                stroke="#2563eb"
+                strokeWidth={2}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
         {/* Popularity Chart */}
-        <div className="bg-white shadow-lg p极客时间4 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Popularity of Petitions</h2>
+        <div className="bg-white shadow-lg p-4 rounded-lg">
+          <h2 className="text-lg font-semibold mb-2">
+            Popularity of Petitions
+          </h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={petitionPopularity}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -182,22 +236,43 @@ const Dashboard = () => {
       {/* Active Petitions */}
       <h2 className="text-lg font-semibold mb-2">Active Petitions</h2>
       <div className="bg-white shadow-lg p-4 rounded-lg">
-      {petitionData.map((petition, index) => (
-          <div key={index} className="mb-4">
-            <h3 className="font-semibold">{petition.title}</h3>
-            <p className="text-xs text-gray-500">Created on {new Date(petition.createdAt.seconds * 1000).toLocaleDateString()}</p>
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-              <div
-                className="h-2 rounded-full"
-                style={{
-                  backgroundColor: "#CA3C25",
-                  width: `${(petition.signed_users.length / petition.goal) * 100}%`,
-                }}
-              ></div>
+        {petitionData.map((petition) => (
+          <div
+            key={petition.id}
+            className="mb-4 flex justify-between items-center"
+          >
+            <div>
+              <h3 className="font-semibold">{petition.title}</h3>
+              <p className="text-xs text-gray-500">
+                Created on{" "}
+                {new Date(
+                  petition.createdAt?.seconds * 1000
+                ).toLocaleDateString()}
+              </p>
+              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                <div
+                  className="h-2 rounded-full"
+                  style={{
+                    backgroundColor: "#CA3C25",
+                    width: `${
+                      ((petition.signed_users?.length || 0) /
+                        (petition.goal || 1)) *
+                      80
+                    }%`,
+                  }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-600">
+                {petition.signed_users?.length || 0} / {petition.goal || 0}
+              </p>
             </div>
-            <p className="text-xs text-gray-600">
-              {petition.signed_users.length} / {petition.goal}
-            </p>
+            <button
+              className="bg-red-700 text-white px-4 py-2 rounded-lg flex space-x-2"
+              onClick={() => handleDelete(petition.id)}
+            >
+              <div>Delete</div> 
+              <FaTrash className="mt-1" />
+            </button>
           </div>
         ))}
       </div>
