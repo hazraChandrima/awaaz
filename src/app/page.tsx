@@ -4,13 +4,28 @@ import { Abhaya_Libre } from "next/font/google";
 import Link from "next/link";
 import Carousel from "./components/Carousel";
 import RotatingText from "./components/effects/RotateText";
-import { useUser } from "./components/context/UserContext";
+import { useEffect, useState } from "react";
+import { auth } from "@/firebase";
+import { User, onAuthStateChanged } from "firebase/auth";
 
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
 
 export default function Home() {
-  const {currentUser} = useUser();
+   const [currentUser, setCurrentUser] = useState<User|null>(null);
+  
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setCurrentUser(user); 
+        } else {
+          setCurrentUser(null);
+        }
+      });
+  
+      return () => unsubscribe();
+    }, []);
+
   return (
     <div>
       <div className="bg-[#E8EBE4]">
@@ -58,7 +73,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Carousel Section */}
       <div className="w-full mt-12 px-6">
         <Carousel />
       </div>

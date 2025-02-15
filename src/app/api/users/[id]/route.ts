@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { doc, getDoc } from "firebase/firestore"; // Use getDoc to fetch a single document by its ID
-import { db } from "@/firebase"; // Assuming this is where your Firestore instance is initialized
-import { IUser } from "@/interfaces/User"; // Assuming you have an interface for User
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase"; 
+import { IUser } from "@/interfaces/User";
 
-// Assuming you're passing the `userId` as a query parameter
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
@@ -16,8 +15,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // Fetch the user document from Firestore using the userId
-    const userDocRef = doc(db, "users", userId); // 'users' is the collection name
+    const userDocRef = doc(db, "users", userId); 
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
@@ -27,7 +25,6 @@ export async function GET(request: Request) {
       );
     }
 
-    // Extract the user data from the document
     const userData: IUser = userDoc.data() as IUser;
 
     return NextResponse.json({ user: userData }, { status: 200 });

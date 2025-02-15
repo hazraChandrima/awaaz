@@ -24,6 +24,8 @@ export async function POST(req: Request) {
     const userId = userCredential.user.uid;
 
     const userData: IUser = {
+      id: userId,
+      role: "user",
       firstname: firstName,
       lastname: lastName,
       email: email,
@@ -36,8 +38,7 @@ export async function POST(req: Request) {
     };
 
     await addDoc(collection(db, "users"), {
-      ...userData,
-      uid: userId,
+      ...userData
     });
 
     return NextResponse.json(
