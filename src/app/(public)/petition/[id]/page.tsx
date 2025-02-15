@@ -159,7 +159,7 @@ const PetitionPage = ({ params }: PageProps) => {
   };
 
   return (
-    <div className="bg-[#E8EBE4] text-[#223843]">
+    <div className="bg-[#E8EBE4] text-[#223843] mt-20">
       <div className="w-full p-6 bg-white shadow-lg">
         <div className="flex border-b">
           <button
