@@ -10,5 +10,4 @@ export interface IUser {
   verified: boolean;
   createdAt: Date;
   updatedAt: Date;
-
 }
