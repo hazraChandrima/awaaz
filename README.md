@@ -33,7 +33,7 @@ To get a local copy up and running follow these simple steps:
 
 ### Prerequisites 📋
 
-Make sure you have npm installed on your local machine.
+- Make sure you have npm installed on your local machine.
 
 ### Installation 🔧
 
