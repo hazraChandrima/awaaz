@@ -27,7 +27,10 @@ import {
 import { FaTrash } from "react-icons/fa6";
 
 
+
 const Dashboard = () => {
+
+  
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
