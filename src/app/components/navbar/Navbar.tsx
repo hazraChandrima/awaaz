@@ -6,10 +6,10 @@ import Image from "next/image";
 import { useState } from "react";
 import { auth } from "@/firebase";
 import { signOut } from "firebase/auth";
-import useCurrentUser from "../hooks/CurrentUser";
+import { useUser } from "../context/UserContext";
 
 function Navbar() {
-  const {currentUser, loading} = useCurrentUser();
+  const {currentUser} = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 

@@ -4,12 +4,13 @@ import { Abhaya_Libre } from "next/font/google";
 import Link from "next/link";
 import Carousel from "./components/Carousel";
 import RotatingText from "./components/effects/RotateText";
-import useCurrentUser from "./components/hooks/CurrentUser";
+import { useUser } from "./components/context/UserContext";
+
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
 
 export default function Home() {
-  const {currentUser, loading} = useCurrentUser();
+  const {currentUser} = useUser();
   return (
     <div>
       <div className="bg-[#E8EBE4]">

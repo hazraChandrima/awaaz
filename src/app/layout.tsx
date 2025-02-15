@@ -2,6 +2,7 @@ import { Armata } from "next/font/google";
 import PrelineScript from "./components/PrelineScript";
 import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
+import { UserProvider } from "./components/context/UserContext";
 import "./globals.css";
 
 export const metadata = {
@@ -20,11 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${armata.className} antialiased`}>
+        <UserProvider>
         <Navbar />
         <div className="text-center text-3xl font-bold mt-4">
         </div>
         <main className="max-w-[85rem] mx-auto lg:py-4">{children}</main>
         <Footer />
+        </UserProvider>
         <PrelineScript />
       </body>
     </html>

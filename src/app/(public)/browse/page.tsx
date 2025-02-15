@@ -12,7 +12,6 @@ export default function BrowsePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch petitions on mount
   useEffect(() => {
     const fetchPetitions = async () => {
       try {
@@ -42,7 +41,6 @@ export default function BrowsePage() {
     fetchPetitions();
   }, []);
 
-  // Filter petitions when the search query changes
   useEffect(() => {
     applyFilter();
   }, [searchQuery]);
@@ -61,7 +59,6 @@ export default function BrowsePage() {
     <div className="lg:px-20">
       <h1 className="text-3xl font-bold mb-4">Discover Petitions to Sign</h1>
 
-      {/* Tabs and Search Filter */}
       <BrowseFilters
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -70,7 +67,6 @@ export default function BrowsePage() {
         applyFilter={applyFilter}
       />
 
-      {/* Petition List */}
       <div className="mt-6">
         <PetitionList petitions={filteredPetitions} />
       </div>
