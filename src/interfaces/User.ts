@@ -1,3 +1,5 @@
+export type UserRole = "admin" | "user";
+
 export interface IUser {
   firstname: string;
   lastname: string;
@@ -6,7 +8,7 @@ export interface IUser {
   location: string;
   phone_number: string;
   verified: boolean;
+  role: UserRole;
   createdAt: Date;
   updatedAt: Date;
-
 }

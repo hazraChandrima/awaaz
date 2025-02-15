@@ -1,83 +1,60 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import clientPromise from '../../../lib/mongodb';
-import User from '../../../interfaces/User';
+import { NextResponse } from "next/server";
+import { collection, getDocs, addDoc, Timestamp } from "firebase/firestore";
+import { db } from "@/firebase";
+import { IUser } from "@/interfaces/User";
 
-export async function POST(request: Request) {
+const usersCollection = collection(db, "users");
+
+export async function GET() {
   try {
-    const { userId: clerkUserId } = auth();
-    if (!clerkUserId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
+    const querySnapshot = await getDocs(usersCollection);
+    const users: IUser[] = querySnapshot.docs.map(doc => {
+      const data = doc.data();
 
-    const { email, firstName, lastName } = await request.json();
-    
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
-    }
+      const user: IUser = {
+        firstname: data.firstname ?? "",
+        lastname: data.lastname ?? "",
+        email: data.email ?? "",
+        profile_image: data.profile_image ?? "",
+        location: data.location ?? "",
+        phone_number: data.phone_number ?? "",
+        verified: data.verified ?? false,
+        createdAt: data.createdAt?.toDate?.() ?? new Date(),
+        updatedAt: data.updatedAt?.toDate?.() ?? new Date(),
+      };
 
-    const client = await clientPromise;
-    const db = client.db();
+      return user;
+    });
 
-    // Create or update user
-    const user = await User.findOneAndUpdate(
-      { clerkUserId },
-      {
-        clerkUserId,
-        email,
-        firstName,
-        lastName
-      },
-      { 
-        upsert: true,
-        new: true,
-        setDefaultsOnInsert: true 
-      }
-    );
-
-    return NextResponse.json(user);
+    return NextResponse.json(users, { status: 200 });
   } catch (error) {
-    console.error('Error in users route:', error);
+    console.error("Error fetching users:", error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: error instanceof Error ? error.message : "Internal Server Error" },
       { status: 500 }
     );
   }
 }
 
-export async function GET() {
+export async function POST(request: Request) {
   try {
-    const { userId: clerkUserId } = auth();
-    if (!clerkUserId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    const body: Partial<IUser> = await request.json();
+
+    if (!body.email || !body.firstname || !body.lastname) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const client = await clientPromise;
-    const db = client.db();
+    const newUserRef = await addDoc(usersCollection, {
+      ...body,
+      createdAt: Timestamp.fromDate(new Date()),
+      updatedAt: Timestamp.fromDate(new Date()),
+    });
 
-    const user = await User.findOne({ clerkUserId });
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(user);
+    return NextResponse.json({ id: newUserRef.id, ...body }, { status: 201 });
   } catch (error) {
-    console.error('Error in users route:', error);
+    console.error("Error creating user:", error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: error instanceof Error ? error.message : "Internal Server Error" },
       { status: 500 }
     );
   }
