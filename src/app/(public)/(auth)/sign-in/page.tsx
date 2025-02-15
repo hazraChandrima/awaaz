@@ -65,12 +65,12 @@ export default function Login() {
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-800">Sign In</h1>
             <p className="mt-2 text-sm text-gray-600">
-              Don't have an account yet? {" "}
+              Don't have an account ? {" "}
               <a
                 className="text-blue-600 hover:underline font-medium"
                 href="/sign-up"
               >
-                Sign up here
+                Create new
               </a>
             </p>
           </div>

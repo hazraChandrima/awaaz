@@ -87,7 +87,7 @@ export default function SignUp() {
                 className="text-blue-600 hover:underline font-medium"
                 href="/sign-in"
               >
-                Sign in here
+                Sign in
               </a>
             </p>
           </div>
@@ -172,7 +172,6 @@ export default function SignUp() {
         </div>
       </div>
 
-      {/* Loader */}
       {loading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="w-10 h-10 border-4 border-gray-300 border-t-[#CA3C25] rounded-full animate-spin"></div>

@@ -4,10 +4,22 @@ import { Abhaya_Libre } from "next/font/google";
 import Vision from "./(public)/home/page";
 import Link from "next/link";
 import RotatingText from "./components/effects/RotateText";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase";
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
 
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setIsLoggedIn(!!user);
+      });
+  
+      return () => unsubscribe();
+    }, []);
   return (
     <>
       <div className="bg-[#E8EBE4]">
@@ -41,11 +53,11 @@ export default function Home() {
               impact and be the catalyst for transformation.
             </p>
             <div className="flex space-x-4 mt-2">
-              <button className="py-3 px-4 inline-flex items-center font-semibold text-sm rounded-md border border-[#CA3C25] text-[#CA3C25] bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
+              <Link href={'/sign-up'} className="py-3 px-4 inline-flex items-center font-semibold text-sm rounded-md border border-[#CA3C25] text-[#CA3C25] bg-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                 Get Started
-              </button>
+              </Link>
               <Link
-                href={"/create"}
+                href={isLoggedIn? "/create" : "/sign-in"}
                 className="py-3 px-4 inline-flex items-center font-semibold text-sm rounded-md bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none"
               >
                 Create Petition
