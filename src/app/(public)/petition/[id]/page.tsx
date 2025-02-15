@@ -36,22 +36,81 @@ interface PageProps {
   };
 }
 
+const getUserLocation = async () => {
+  if (!navigator.geolocation) {
+    console.error("Geolocation is not supported by your browser");
+    return null;
+  }
+
+  return new Promise<{ city: string; state: string } | null>((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+          );
+          const data = await response.json();
+          console.log(data);
+
+          if (data.status !== "OK" || !data.results.length) {
+            console.error("Error fetching location data:", data.status);
+            resolve(null);
+            return;
+          }
+
+          // Extract city and state from results
+          let city = "Unknown City";
+          let state = "Unknown State";
+
+          for (const component of data.results[0].address_components) {
+            if (component.types.includes("locality")) {
+              city = component.long_name;
+            } else if (component.types.includes("administrative_area_level_1")) {
+              state = component.long_name;
+            }
+          }
+
+          resolve({ city, state });
+        } catch (error) {
+          console.error("Error fetching location:", error);
+          resolve(null);
+        }
+      },
+      (error) => {
+        console.error("Error getting geolocation:", error);
+        resolve(null);
+      }
+    );
+  });
+};
+
 const PetitionPage = ({ params }: PageProps) => {
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
   const [displayName, setDisplayName] = useState(true);
-  const [activeTab, setActiveTab] = useState("details"); 
+  const [activeTab, setActiveTab] = useState("details");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User|null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isSigning, setIsSigning] = useState(false);
   const [signatureError, setSignatureError] = useState("");
   const [showOTPVerification, setShowOTPVerification] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);  // Add a loading state
-  
+  const [showLocationErrorPopup, setShowLocationErrorPopup] = useState(false); // Popup state
+  const [userLocation, setUserLocation] = useState<{ city: string; state: string } | null>(null);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      const location = await getUserLocation();
+      setUserLocation(location);
+    };
+    fetchLocation();
+  }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setCurrentUser(user); 
+        setCurrentUser(user);
       } else {
         setCurrentUser(null);
       }
@@ -61,7 +120,7 @@ const PetitionPage = ({ params }: PageProps) => {
   }, []);
 
   const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ''}`;
-  
+
   useEffect(() => {
     const fetchPetitionData = async () => {
       try {
@@ -70,38 +129,51 @@ const PetitionPage = ({ params }: PageProps) => {
         );
         const data = await response.json();
         setPetitionData(data);
-        setIsLoading(false);  // Set loading to false once data is fetched
       } catch (error) {
         console.error("Error fetching petition data:", error);
-        setIsLoading(false);  // Set loading to false in case of an error
       }
     };
 
     fetchPetitionData();
   }, [params.id]);
 
-  if (isLoading) {
-    return (
-      <div className="text-center">
-        <div className="border-t-4 border-red-500 border-solid rounded-full w-16 h-16 animate-spin mx-auto"></div>
-      </div>
-    );
-  }
+  if (!petitionData) return <div>Loading...</div>;
 
-  if (!petitionData) return <div>Error loading petition data...</div>;
+  const handleSignPetition = () => {
+    // Check if the petition's location is Mumbai, Maharashtra, India
+    if (petitionData.location === "Mumbai, Maharashtra, India") {
+      setShowLocationErrorPopup(true); // Show error popup
+      return;
+    }
+
+    if (signatureError) {
+      alert(signatureError); // Show error message if user is restricted
+      return;
+    }
+
+    if (currentUser) {
+      setShowOTPVerification(true);
+    } else {
+      window.location.href = '/sign-in';
+    }
+  };
 
   return (
     <div className="bg-[#E8EBE4] text-[#223843]">
       <div className="w-full p-6 bg-white shadow-lg">
         <div className="flex border-b">
           <button
-            className={`py-2 px-6 text-lg font-semibold ${activeTab === "details" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"}`}
+            className={`py-2 px-6 text-lg font-semibold ${
+              activeTab === "details" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"
+            }`}
             onClick={() => setActiveTab("details")}
           >
             Petition Details
           </button>
           <button
-            className={`py-2 px-6 text-lg font-semibold ${activeTab === "comments" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"}`}
+            className={`py-2 px-6 text-lg font-semibold ${
+              activeTab === "comments" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"
+            }`}
             onClick={() => setActiveTab("comments")}
           >
             Comments
@@ -119,7 +191,7 @@ const PetitionPage = ({ params }: PageProps) => {
                 <img
                   src={petitionData.image_url || "https://via.placeholder.com/600x400"}
                   alt="Petition Image"
-                  className="rounded-xl shadow-md"
+                  className="rounded-xl shadow-md w-full"
                 />
                 <p className="text-[#223843] mt-4 leading-relaxed text-lg">{petitionData.description}</p>
                 <h2 className="text-[#223843] text-2xl font-bold mt-8">Updates</h2>
@@ -131,7 +203,7 @@ const PetitionPage = ({ params }: PageProps) => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-xl shadow-md">
+              <div className="bg-white p-6 rounded-xl shadow-md w-full lg:w-1/3 mt-6 lg:mt-0">
                 <h3 className="text-[#223843] font-bold text-xl">Sign this petition</h3>
                 <div className="text-center">
                   <div className="flex items-center justify-between">
@@ -154,9 +226,12 @@ const PetitionPage = ({ params }: PageProps) => {
                   <div className="flex items-center gap-2 mt-3">
                     <FaUserCircle className="text-2xl text-gray-600" />
                     <span className="font-bold">{currentUser?.displayName}</span>
-                    <span className="text-gray-600">Your Location</span>
+                    <span className="text-gray-600">
+                      Jamshedpur, Jharkhand
+                    </span>
                     <MdModeEdit className="text-gray-500 cursor-pointer" />
                   </div>
+
                   <textarea
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg mt-3"
                     placeholder="I'm signing because... (optional)"
@@ -169,15 +244,10 @@ const PetitionPage = ({ params }: PageProps) => {
                     </button>
                     <span className="text-gray-700">Display my name and comment on this petition</span>
                   </div>
+
                   <button
                     className="w-full py-3 mt-4 bg-[#CA3C25] hover:bg-red-700 text-white text-lg font-bold rounded-lg"
-                    onClick={() => {
-                      if (currentUser) {
-                        setShowOTPVerification(true);
-                      } else {
-                        window.location.href = '/sign-in';
-                      }
-                    }}
+                    onClick={handleSignPetition} // Using new sign handler
                   >
                     {isSigning ? 'Signing...' : 'Sign this petition'}
                   </button>
@@ -204,13 +274,29 @@ const PetitionPage = ({ params }: PageProps) => {
         )}
       </div>
 
-      <ShareModal 
-        isOpen={isModalOpen} 
+      {/* Location Error Popup */}
+      {showLocationErrorPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-xl font-semibold text-[#CA3C25]">Out of Scope</h3>
+            <p className="mt-4 text-gray-700">You cannot sign this petition as it is out of your scope. Please check the petition's location and scope.</p>
+            <button
+              className="mt-4 bg-[#CA3C25] text-white py-2 px-6 rounded-lg"
+              onClick={() => setShowLocationErrorPopup(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      <ShareModal
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        shareUrl={shareUrl} 
-        signatureCount={0} 
+        shareUrl={shareUrl}
+        signatureCount={0}
       />
-      
+
       {showOTPVerification && (
         <OTPVerification
           onVerify={async (phoneNumber: string, otp: string) => {
@@ -242,7 +328,7 @@ const PetitionPage = ({ params }: PageProps) => {
               );
               const updatedData = await updatedResponse.json();
               setPetitionData(updatedData);
-              
+
               return true;
             } catch (error) {
               setSignatureError(error instanceof Error ? error.message : "Failed to sign petition");

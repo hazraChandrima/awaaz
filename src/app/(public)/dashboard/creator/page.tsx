@@ -13,7 +13,6 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import React, { useState, useEffect } from "react";
 import { auth } from "../../../../firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
@@ -183,7 +182,7 @@ const Dashboard = () => {
       {/* Active Petitions */}
       <h2 className="text-lg font-semibold mb-2">Active Petitions</h2>
       <div className="bg-white shadow-lg p-4 rounded-lg">
-        {petitions.map((petition, index) => (
+      {petitionData.map((petition, index) => (
           <div key={index} className="mb-4">
             <h3 className="font-semibold">{petition.title}</h3>
             <p className="text-xs text-gray-500">Created on {new Date(petition.createdAt.seconds * 1000).toLocaleDateString()}</p>
