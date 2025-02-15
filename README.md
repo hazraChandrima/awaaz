@@ -50,10 +50,6 @@ Make sure you have npm installed on your local machine.
    npm run dev
    ```
 
-## Usage 💡
-
-Describe how to use your project here. You can add screenshots and examples to illustrate how the application works.
-
 
 ## Contributing 🤝
 
