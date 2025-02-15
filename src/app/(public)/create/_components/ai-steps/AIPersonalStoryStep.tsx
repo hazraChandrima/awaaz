@@ -13,6 +13,11 @@ export default function AIPersonalStoryStep({
   prevStep,
   generateAIContent,
 }: AIPersonalStoryStepProps) {
+  // Function to sanitize input (remove HTML, quotes, and asterisks)
+  const sanitizeInput = (input: string) => {
+    return input.replace(/<\/?[^>]+(>|$)/g, "").replace(/["*]/g, ""); 
+  };
+
   return (
     <div className="max-w-2xl mx-auto mt-12 p-6">
       <h1 className="text-3xl font-bold mb-1">One last thing</h1>
@@ -21,12 +26,14 @@ export default function AIPersonalStoryStep({
         Adding a personal story will make the petition stronger.
       </p>
       <label className="block text-lg font-semibold mb-2">Why is it personal to you?</label>
+      
       <textarea
-        value={personalStory}
-        onChange={(e) => setPersonalStory(e.target.value)}
+        value={sanitizeInput(personalStory)} // Ensures no HTML, *, or " are stored
+        onChange={(e) => setPersonalStory(sanitizeInput(e.target.value))}
         className="w-full p-3 border border-gray-300 rounded-md text-lg"
         rows={6}
       ></textarea>
+      
       <div className="mt-4 flex justify-between">
         <button onClick={prevStep} className="px-4 py-2 border border-gray-500 text-gray-700 rounded">
           Back
