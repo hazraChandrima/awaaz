@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       }
 
       const fast2smsUrl = new URL('https://www.fast2sms.com/dev/bulkV2');
-      fast2smsUrl.searchParams.append('authorization', process.env.FAST2SMS_API_KEY!);
+      fast2smsUrl.searchParams.append('authorization', process.env.NEXT_PUBLIC_FAST2SMS_API_KEY!);
       fast2smsUrl.searchParams.append('message', `Your verification code is: ${otp}`);
       fast2smsUrl.searchParams.append('language', 'english');
       fast2smsUrl.searchParams.append('route', 'q');

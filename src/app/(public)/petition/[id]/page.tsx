@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsCheckSquare, BsSquare } from "react-icons/bs";
-import ShareModal from "../_components/ShareModal"; 
+import ShareModal from "../_components/ShareModal";
+import OTPVerification from "../../../components/OTPVerification";
 import { auth } from "../../../../firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
 
@@ -44,6 +45,7 @@ const PetitionPage = ({ params }: PageProps) => {
   const [currentUser, setCurrentUser] = useState<User|null>(null);
   const [isSigning, setIsSigning] = useState(false);
   const [signatureError, setSignatureError] = useState("");
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
   
   
     useEffect(() => {
@@ -108,7 +110,7 @@ const PetitionPage = ({ params }: PageProps) => {
             <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:gap-2.5">
               <div className="lg:w-2/3">
                 <img
-                  src={petitionData.image_url || "https://via.placeholder.com/600x400"} // Placeholder if no image
+                  src={petitionData.image_url || "https://via.placeholder.com/600x400"}
                   alt="Petition Image"
                   className="rounded-xl shadow-md"
                 />
@@ -163,10 +165,10 @@ const PetitionPage = ({ params }: PageProps) => {
                   <button
                     className="w-full py-3 mt-4 bg-[#CA3C25] hover:bg-red-700 text-white text-lg font-bold rounded-lg"
                     onClick={() => {
-                      if(currentUser){
-                        setIsModalOpen(true)
-                      }else {
-                        window.location.href = '/sign-in'
+                      if (currentUser) {
+                        setShowOTPVerification(true);
+                      } else {
+                        window.location.href = '/sign-in';
                       }
                     }}
                   >
@@ -201,6 +203,48 @@ const PetitionPage = ({ params }: PageProps) => {
         shareUrl={shareUrl} 
         signatureCount={0} 
       />
+      
+      {showOTPVerification && (
+        <OTPVerification
+          onVerify={async (phoneNumber: string, otp: string) => {
+            try {
+              const response = await fetch(
+                `/api/petitions/${params.id}`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    userId: currentUser?.uid,
+                    phoneNumber,
+                    otp
+                  }),
+                }
+              );
+
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message);
+              }
+
+              setIsModalOpen(true);
+              // Refresh petition data
+              const updatedResponse = await fetch(
+                `/api/petitions/${params.id}`
+              );
+              const updatedData = await updatedResponse.json();
+              setPetitionData(updatedData);
+              
+              return true;
+            } catch (error) {
+              setSignatureError(error instanceof Error ? error.message : "Failed to sign petition");
+              return false;
+            }
+          }}
+          onClose={() => setShowOTPVerification(false)}
+        />
+      )}
     </div>
   );
 };
