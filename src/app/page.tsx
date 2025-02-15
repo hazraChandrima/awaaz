@@ -3,11 +3,10 @@
 import { Abhaya_Libre } from "next/font/google";
 import Link from "next/link";
 import Carousel from "./components/Carousel";
-import RotatingText from "./components/effects/RotateText"; // Import the LocationChecker
+import RotatingText from "./components/effects/RotateText";
 import { useEffect, useState } from "react";
 import { auth } from "@/firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
-import Vision from "./(public)/home/page";
 
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
