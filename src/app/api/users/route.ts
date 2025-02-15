@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import clientPromise from '../../../lib/mongodb';
-import User from '../../../models/User';
+import User from '../../../interfaces/User';
 
 export async function POST(request: Request) {
   try {

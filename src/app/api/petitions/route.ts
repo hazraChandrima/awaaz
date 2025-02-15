@@ -1,63 +1,26 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import Petition from "@/models/Petition";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
+import { IPetition } from "@/interfaces/Petition";
 
-export async function POST(req: Request) {
+export async function GET() {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const querySnapshot = await getDocs(collection(db, "petitions"));
+    const petitions: IPetition[] = [];
 
-    const data = await req.json();
-    const {
-      title,
-      description,
-      image_url,
-      category,
-      scope,
-      location,
-      goal,
-      expiry,
-    } = data;
-
-    if (
-      !title ||
-      !description ||
-      !image_url ||
-      !scope ||
-      !location ||
-      !goal ||
-      !expiry
-    ) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    const newPetition = new Petition({
-      title,
-      desc: description,
-      image: image_url,
-      category: category || null,
-      scope,
-      user: userId,
-      location,
-      goal,
-      expiry: new Date(expiry),
+    querySnapshot.forEach((doc) => {
+      const petitionData = doc.data() as IPetition;
+      petitions.push({
+        ...petitionData,
+        id: doc.id, 
+      });
     });
 
-    await newPetition.save();
-
-    return NextResponse.json(
-      { message: "Petition created successfully", petition: newPetition },
-      { status: 201 }
-    );
+    return NextResponse.json({ petitions }, { status: 200 });
   } catch (error) {
-    console.error("Error in POST /api/petitions:", error);
+    console.error("Error in petitions route:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: error instanceof Error ? error.message : "Internal Server Error" },
       { status: 500 }
     );
   }
