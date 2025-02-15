@@ -12,6 +12,8 @@ export async function GET() {
       const data = doc.data();
 
       const user: IUser = {
+        id: doc.id,
+        role: data.role ?? "user", 
         firstname: data.firstname ?? "",
         lastname: data.lastname ?? "",
         email: data.email ?? "",
@@ -40,12 +42,13 @@ export async function POST(request: Request) {
   try {
     const body: Partial<IUser> = await request.json();
 
-    if (!body.email || !body.firstname || !body.lastname) {
+    if (!body.email || !body.firstname || !body.lastname || !body.role) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     const newUserRef = await addDoc(usersCollection, {
       ...body,
+      role: body.role ?? "user", // Default role to "user"
       createdAt: Timestamp.fromDate(new Date()),
       updatedAt: Timestamp.fromDate(new Date()),
     });

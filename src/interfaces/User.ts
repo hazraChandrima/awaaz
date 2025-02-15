@@ -1,5 +1,3 @@
-export type UserRole = "admin" | "user";
-
 export interface IUser {
   id?: string;
   role: "user" | "admin";
@@ -10,7 +8,6 @@ export interface IUser {
   location: string;
   phone_number: string;
   verified: boolean;
-  role: UserRole;
   createdAt: Date;
   updatedAt: Date;
 }
