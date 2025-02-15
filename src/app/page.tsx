@@ -4,7 +4,6 @@ import { Abhaya_Libre } from "next/font/google";
 import Link from "next/link";
 import Carousel from "./components/Carousel";
 import RotatingText from "./components/effects/RotateText";
-import useCurrentUser from "./components/hooks/CurrentUser";
 import LocationChecker from "./components/LocationChecker";  // Import the LocationChecker
 import { useEffect, useState } from "react";
 import { auth } from "@/firebase";
@@ -15,7 +14,6 @@ import Vision from "./(public)/home/page";
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
 
 export default function Home() {
-  const { currentUser, loading } = useCurrentUser();
    const [currentUser, setCurrentUser] = useState<User|null>(null);
   
     useEffect(() => {

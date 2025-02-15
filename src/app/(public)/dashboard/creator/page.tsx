@@ -12,41 +12,125 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { auth } from "../../../../firebase";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "../../../../firebase";
 
 const Dashboard = () => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [petitionData, setPetitionData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribeAuth();
+  }, []);
+
+  useEffect(() => {
+    if (!currentUser) return;
+    
+    const q = query(collection(db, "petitions"), where("userId", "==", currentUser.uid));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const petitions = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPetitionData(petitions);
+    }, (error) => {
+      setError("Failed to fetch petitions");
+      console.error("Error fetching petitions:", error);
+    });
+
+    return () => unsubscribe();
+  }, [currentUser]);
+
   const petitionStats = [
-    { title: "Total Signatures", value: "7,892", change: "+12.5%" },
-    { title: "Active Petitions", value: "3", change: "+1" },
-    { title: "Success Rate", value: "85%", change: "+5.2%" },
-    { title: "Avg. Daily Signatures", value: "156", change: "+8.2%" },
-    { title: "Total Goals Combined", value: "8,000", change: "97.5%" },
-    { title: "Most Successful", value: "Public Transport", change: "5,678" },
+    { 
+      title: "Total Signatures", 
+      value: petitionData.reduce((sum, p) => sum + (p.signed_users?.length || 0), 0).toLocaleString(),
+      change: "+0%" 
+    },
+    { 
+      title: "Active Petitions", 
+      value: petitionData.length.toString(),
+      change: "+0%" 
+    },
+    { 
+      title: "Success Rate", 
+      value: `${Math.round((petitionData.reduce((sum, p) => sum + (p.signed_users?.length || 0), 0) / 
+        petitionData.reduce((sum, p) => sum + (p.goal || 0), 0)) * 100)}%`,
+      change: "+0%" 
+    },
+    { 
+      title: "Avg. Daily Signatures", 
+      value: "0", 
+      change: "+0%" 
+    },
+    { 
+      title: "Total Goals Combined", 
+      value: petitionData.reduce((sum, p) => sum + (p.goal || 0), 0).toLocaleString(),
+      change: "0%" 
+    },
+    { 
+      title: "Most Successful", 
+      value: petitionData.reduce((a: any, b: any) => (a.signed_users?.length || 0) > (b.signed_users?.length || 0) ? a : b, { signed_users: [], title: "None" })?.title,
+      change: "0" 
+    },
   ];
 
-  const activePetitions = [
-    { name: "Save Local Park", created: "2023-10-15", signed: 1234, goal: 2000 },
-    { name: "Improve Public Transport", created: "2023-10-10", signed: 5678, goal: 5000 },
-    { name: "Community Garden Initiative", created: "2023-10-05", signed: 890, goal: 1000 },
-  ];
+  const activePetitions = petitionData.map(petition => ({
+    name: petition.title,
+    created: new Date(petition.createdAt?.seconds * 1000).toLocaleDateString(),
+    signed: petition.signed_users?.length || 0,
+    goal: petition.goal || 0
+  }));
 
-  const signatureGrowth = [
-    { date: "Oct 1", signatures: 100 },
-    { date: "Oct 5", signatures: 800 },
-    { date: "Oct 10", signatures: 2200 },
-    { date: "Oct 15", signatures: 3500 },
-    { date: "Oct 20", signatures: 4500 },
-    { date: "Oct 30", signatures: 5600 },
-  ];
+  const signatureGrowth = petitionData
+    .flatMap(petition => 
+      petition.signed_users?.map((timestamp: any) => ({
+        date: new Date(timestamp?.seconds * 1000).toLocaleDateString(),
+        signatures: 1
+      })) || []
+    )
+    .reduce((acc: { date: string; signatures: number }[], curr) => {
+      const existing = acc.find((item: { date: string }) => item.date === curr.date);
+      if (existing) {
+        existing.signatures += 1;
+      } else {
+        acc.push({ date: curr.date, signatures: 1 });
+      }
+      return acc;
+    }, [] as { date: string, signatures: number }[])
+    .sort((a: { date: string }, b: { date: string }) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const petitionPopularity = [
-    { name: "Local Park", popularity: 70 },
-    { name: "Public Transport", popularity: 90 },
-    { name: "Community Garden", popularity: 60 },
-  ];
+  const petitionPopularity = petitionData.map(petition => ({
+    name: petition.title,
+    popularity: Math.round((petition.signed_users?.length || 0) / (petition.goal || 1) * 100)
+  }));
 
   return (
     <div className="p-4 bg-gray-100 min-h-screen">
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg">Loading dashboard...</div>
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          {error}
+        </div>
+      )}
       <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
       <p className="text-gray-600 mb-4">Overview of your petition campaigns</p>
 
@@ -69,7 +153,7 @@ const Dashboard = () => {
         {/* Signature Growth Chart */}
         <div className="bg-white shadow-lg p-4 rounded-lg">
           <h2 className="text-lg font-semibold mb-2">Signature Growth</h2>
-          <ResponsiveContainer width="100%" height={250}>
+          <ResponsiveContainer width="极客时间" height={250}>
             <LineChart data={signatureGrowth}>
               <XAxis dataKey="date" />
               <YAxis />
@@ -80,7 +164,7 @@ const Dashboard = () => {
         </div>
 
         {/* Popularity Chart */}
-        <div className="bg-white shadow-lg p-4 rounded-lg">
+        <div className="bg-white shadow-lg p极客时间4 rounded-lg">
           <h2 className="text-lg font-semibold mb-2">Popularity of Petitions</h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={petitionPopularity}>
