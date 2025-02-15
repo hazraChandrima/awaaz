@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { FaGoogle, FaFacebook, FaLinkedinIn } from "react-icons/fa6";
+import { FaGoogle, FaFacebook } from "react-icons/fa6";
 import { auth } from "@/firebase";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
 
@@ -43,7 +42,7 @@ export default function Login() {
           authProvider = new GoogleAuthProvider();
           break;
         case "facebook":
-          authProvider = new FacebookAuthProvider();
+          throw new Error("Currently not available.");
           break;
         default:
           throw new Error("Unsupported provider");

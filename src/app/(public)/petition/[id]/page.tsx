@@ -5,7 +5,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsCheckSquare, BsSquare } from "react-icons/bs";
 import ShareModal from "../_components/ShareModal"; 
-import { useUser } from "@/app/components/context/UserContext";
+import { auth } from "../../../../firebase";
+import { User, onAuthStateChanged } from "firebase/auth";
 
 interface PetitionData {
   signed_users: string[];
@@ -28,13 +29,34 @@ interface PetitionData {
   id: string;
 }
 
-const PetitionPage = () => {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+const PetitionPage = ({ params }: PageProps) => {
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
   const [displayName, setDisplayName] = useState(true);
   const [activeTab, setActiveTab] = useState("details"); 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {currentUser}  = useUser();
+  const [currentUser, setCurrentUser] = useState<User|null>(null);
+  const [isSigning, setIsSigning] = useState(false);
+  const [signatureError, setSignatureError] = useState("");
+  
+  
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setCurrentUser(user); 
+        } else {
+          setCurrentUser(null);
+        }
+      });
+  
+      return () => unsubscribe();
+    }, []);
 
   const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ''}`;
   
@@ -42,7 +64,7 @@ const PetitionPage = () => {
     const fetchPetitionData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/petitions/AbsaHSmKeTIcdhGHOvIo`
+          `http://localhost:3000/api/petitions/${params.id}`
         );
         const data = await response.json();
         setPetitionData(data);
@@ -52,7 +74,7 @@ const PetitionPage = () => {
     };
 
     fetchPetitionData();
-  }, []);
+  }, [params.id]);
 
   if (!petitionData) return <div>Loading...</div>;
   return (
@@ -93,7 +115,6 @@ const PetitionPage = () => {
                 <p className="text-[#223843] mt-4 leading-relaxed text-lg">{petitionData.description}</p>
                 <h2 className="text-[#223843] text-2xl font-bold mt-8">Updates</h2>
                 <div className="mt-4">
-                  {/* You can modify this to include actual updates */}
                   <div className="bg-gray-100 p-3 rounded-lg flex justify-between mt-2">
                     <p className="text-gray-700 font-medium">Initial petition created</p>
                     <span className="text-gray-500 text-sm">1 day ago</span>
@@ -141,10 +162,19 @@ const PetitionPage = () => {
                   </div>
                   <button
                     className="w-full py-3 mt-4 bg-[#CA3C25] hover:bg-red-700 text-white text-lg font-bold rounded-lg"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                      if(currentUser){
+                        setIsModalOpen(true)
+                      }else {
+                        window.location.href = '/sign-in'
+                      }
+                    }}
                   >
-                    Sign this petition
+                    {isSigning ? 'Signing...' : 'Sign this petition'}
                   </button>
+                  {signatureError && (
+                    <p className="text-red-500 text-sm mt-2">{signatureError}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -165,12 +195,11 @@ const PetitionPage = () => {
         )}
       </div>
 
-      {/* Share Modal */}
       <ShareModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => setIsModalOpen(false)}
         shareUrl={shareUrl} 
-        signatureCount={petitionData.signed_users.length} 
+        signatureCount={0} 
       />
     </div>
   );

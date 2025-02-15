@@ -7,6 +7,7 @@ import RotatingText from "./components/effects/RotateText";
 import { useEffect, useState } from "react";
 import { auth } from "@/firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
+import Vision from "./(public)/home/page";
 
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
@@ -76,6 +77,7 @@ export default function Home() {
       <div className="w-full mt-12 px-6">
         <Carousel />
       </div>
+      <Vision/>
     </div>
   );
 }
