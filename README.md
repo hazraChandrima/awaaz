@@ -50,7 +50,7 @@ To get a local copy up and running follow these simple steps:
    ```
 
 
-### Setting Up Environment Variables 🔑
+## Setting Up Environment Variables 🔑
 
 Create a `.env.local` file in the root directory and add the following environment variables:
 
