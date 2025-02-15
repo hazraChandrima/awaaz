@@ -4,22 +4,12 @@ import { Abhaya_Libre } from "next/font/google";
 import Link from "next/link";
 import Carousel from "./components/Carousel";
 import RotatingText from "./components/effects/RotateText";
-import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/firebase";
+import useCurrentUser from "./components/hooks/CurrentUser";
 
 const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-    useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        setIsLoggedIn(!!user);
-      });
-  
-      return () => unsubscribe();
-    }, []);
+  const {currentUser, loading} = useCurrentUser();
   return (
     <div>
       <div className="bg-[#E8EBE4]">
@@ -57,7 +47,7 @@ export default function Home() {
                 Get Started
               </Link>
               <Link
-                href={isLoggedIn? "/create" : "/sign-in"}
+                href={currentUser ? "/create" : "/sign-in"}
                 className="py-3 px-4 inline-flex items-center font-semibold text-sm rounded-md bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none"
               >
                 Create Petition

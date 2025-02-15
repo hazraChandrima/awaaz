@@ -8,6 +8,7 @@ export interface IPetition {
   userId: string;
   location: string;
   goal: number;
+  signed_users: string[];
   createdAt: Date;
   updatedAt: Date;
 }
