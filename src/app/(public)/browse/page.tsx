@@ -46,7 +46,7 @@ export default function BrowsePage() {
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
-    <div className="lg:px-20">
+    <div className="lg:px-20 mt-24">
       <h1 className="text-3xl font-bold mb-4">Discover Petitions to Sign</h1>
 
       <BrowseFilters
