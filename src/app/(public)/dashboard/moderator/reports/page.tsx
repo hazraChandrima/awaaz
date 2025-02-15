@@ -40,7 +40,7 @@ const ReportsPage = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="p-6 flex-1 bg-gray-100 min-h-screen">
+      <div className="mt-20 p-6 flex-1 bg-gray-100 min-h-screen">
         <h1 className="text-2xl font-bold mb-4">Reports</h1>
         <p className="mb-4 text-gray-700">View and manage reports submitted by users.</p>
 

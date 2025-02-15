@@ -37,7 +37,7 @@ const Users = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="p-6 flex-1">
+      <div className="mt-20 p-6 flex-1">
         <h1 className="text-2xl font-bold">Manage Users</h1>
         <p className="text-gray-600">View and manage users on the platform</p>
 
