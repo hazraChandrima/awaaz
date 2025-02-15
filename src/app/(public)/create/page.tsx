@@ -143,12 +143,14 @@ export default function CreatePetitionPage() {
                       Back
                     </button>
                   )}
-                  <button
+                  {step < 7 && (
+                    <button
                     className="px-4 py-2 bg-[#1d1b1a] text-white rounded"
                     onClick={handleNextStep}
-                  >
-                    {step === 7 ? "Publish" : "Next"}
+                    >
+                   Next
                   </button>
+                  )}
                 </div>
               )}
             </>

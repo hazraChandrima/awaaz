@@ -87,6 +87,7 @@ const ReviewAndPublish: React.FC<Props> = ({
       console.log("✅ Successfully posted request to DB:", data);
 
       setUploadResponse("✅ Petition submitted successfully!");
+      window.location.href = '/dashboard/creator'
     } catch (error) {
       console.error("❌ Error submitting petition:", error);
       setUploadResponse("❌ Failed to submit petition. Please try again.");
