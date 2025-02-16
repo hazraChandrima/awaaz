@@ -13,7 +13,6 @@ Your voice has the power to spark change. Awaaz empowers individuals and communi
 - **Animations**: Framer Motion
 - **Graphs & Charts**: Recharts.js
 - **CDN & Image Optimization**: Imagekit.io
-- **AI Petition Generation**: Using Gemini AI api
 
 
 ## Key Features ✨
