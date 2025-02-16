@@ -31,11 +31,6 @@ interface PetitionData {
 }
 
 
-interface PageProps {
-  params: { id: string }; // ✅ Fix: params should be a plain object
-}
-
-
 const getUserLocation = async () => {
   if (!navigator.geolocation) {
     console.error("Geolocation is not supported by your browser");
@@ -86,7 +81,7 @@ const getUserLocation = async () => {
   });
 };
 
-const PetitionPage = ({ params }: PageProps) => {
+const PetitionPage = ({ params }: { params: { id: string } }) => {
   const petitionId = params.id; // Unwrap params using React.use()
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
@@ -98,7 +93,10 @@ const PetitionPage = ({ params }: PageProps) => {
   const [signatureError, setSignatureError] = useState("");
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showLocationErrorPopup, setShowLocationErrorPopup] = useState(false); // Popup state
-  const [userLocation, setUserLocation] = useState<{ city: string; state: string } | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    city: string;
+    state: string;
+  } | null>(null);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -120,7 +118,7 @@ const PetitionPage = ({ params }: PageProps) => {
     return () => unsubscribe();
   }, []);
 
-  const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ''}`;
+  const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ""}`;
 
   useEffect(() => {
     if (!petitionId) return;
@@ -136,8 +134,6 @@ const PetitionPage = ({ params }: PageProps) => {
     };
     fetchPetitionData();
   }, [petitionId]);
-  
-  
 
   if (!petitionData) return <div>Loading...</div>;
 
@@ -146,7 +142,6 @@ const PetitionPage = ({ params }: PageProps) => {
       setShowLocationErrorPopup(true);
       return;
     }
-    
 
     if (signatureError) {
       alert(signatureError); // Show error message if user is restricted
@@ -156,7 +151,7 @@ const PetitionPage = ({ params }: PageProps) => {
     if (currentUser) {
       setShowOTPVerification(true);
     } else {
-      window.location.href = '/sign-in';
+      window.location.href = "/sign-in";
     }
   };
 
