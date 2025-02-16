@@ -1,6 +1,5 @@
 import React from "react";
 import PetitionCard from "./PetitionCard";
-import { Petition } from "../types";
 import { IPetition } from "@/interfaces/Petition";
 
 

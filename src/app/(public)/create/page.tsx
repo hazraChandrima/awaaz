@@ -22,7 +22,8 @@ export default function CreatePetitionPage() {
   const [image, setImage] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [locationError, setLocationError] = useState<boolean>(false);
-  const [goal, setGoal] = useState<number>(100);
+  // const [goal, setGoal] = useState<number>(100);
+  const goal = 100;
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {

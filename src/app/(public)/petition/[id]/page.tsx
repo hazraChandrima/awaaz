@@ -94,7 +94,7 @@ const PetitionPage = ({ params }: PageProps) => {
   const [activeTab, setActiveTab] = useState("details");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isSigning, setIsSigning] = useState(false);
+  // const [isSigning, setIsSigning] = useState(false);
   const [signatureError, setSignatureError] = useState("");
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showLocationErrorPopup, setShowLocationErrorPopup] = useState(false); // Popup state
@@ -166,7 +166,9 @@ const PetitionPage = ({ params }: PageProps) => {
         <div className="flex border-b">
           <button
             className={`py-2 px-6 text-lg font-semibold ${
-              activeTab === "details" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"
+              activeTab === "details"
+                ? "text-[#CA3C25] border-b-4 border-[#CA3C25]"
+                : "text-gray-600"
             }`}
             onClick={() => setActiveTab("details")}
           >
@@ -174,7 +176,9 @@ const PetitionPage = ({ params }: PageProps) => {
           </button>
           <button
             className={`py-2 px-6 text-lg font-semibold ${
-              activeTab === "comments" ? "text-[#CA3C25] border-b-4 border-[#CA3C25]" : "text-gray-600"
+              activeTab === "comments"
+                ? "text-[#CA3C25] border-b-4 border-[#CA3C25]"
+                : "text-gray-600"
             }`}
             onClick={() => setActiveTab("comments")}
           >
@@ -184,53 +188,81 @@ const PetitionPage = ({ params }: PageProps) => {
 
         {activeTab === "details" ? (
           <>
-            <h1 className="text-[#223843] text-3xl font-bold text-center mt-4 leading-snug">{petitionData.title}</h1>
+            <h1 className="text-[#223843] text-3xl font-bold text-center mt-4 leading-snug">
+              {petitionData.title}
+            </h1>
             <p className="text-center text-sm text-gray-600 mt-2">
-              <strong>Scope:</strong> {petitionData.scope} | <strong>Category:</strong> {petitionData.category} | <strong>Location:</strong> {petitionData.location}
+              <strong>Scope:</strong> {petitionData.scope} |{" "}
+              <strong>Category:</strong> {petitionData.category} |{" "}
+              <strong>Location:</strong> {petitionData.location}
             </p>
             <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:gap-2.5">
               <div className="lg:w-2/3">
                 <img
-                  src={petitionData.image_url || "https://via.placeholder.com/600x400"}
+                  src={
+                    petitionData.image_url ||
+                    "https://via.placeholder.com/600x400"
+                  }
                   alt="Petition Image"
                   className="rounded-xl shadow-md w-full"
                 />
-                <p className="text-[#223843] mt-4 leading-relaxed text-lg">{petitionData.description}</p>
-                <h2 className="text-[#223843] text-2xl font-bold mt-8">Updates</h2>
+                <p className="text-[#223843] mt-4 leading-relaxed text-lg">
+                  {petitionData.description}
+                </p>
+                <h2 className="text-[#223843] text-2xl font-bold mt-8">
+                  Updates
+                </h2>
                 <div className="mt-4">
                   <div className="bg-gray-100 p-3 rounded-lg flex justify-between mt-2">
-                    <p className="text-gray-700 font-medium">Initial petition created</p>
+                    <p className="text-gray-700 font-medium">
+                      Initial petition created
+                    </p>
                     <span className="text-gray-500 text-sm">1 day ago</span>
                   </div>
                 </div>
               </div>
 
               <div className="bg-white p-6 rounded-xl shadow-md w-full lg:w-1/3 mt-6 lg:mt-0">
-                <h3 className="text-[#223843] font-bold text-xl">Sign this petition</h3>
+                <h3 className="text-[#223843] font-bold text-xl">
+                  Sign this petition
+                </h3>
                 <div className="text-center">
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-[#CA3C25]">{petitionData.signed_users.length.toLocaleString()}</span>
-                    <span className="text-xl font-bold text-gray-600">{petitionData.goal.toLocaleString()}</span>
+                    <span className="text-2xl font-bold text-[#CA3C25]">
+                      {petitionData.signed_users.length.toLocaleString()}
+                    </span>
+                    <span className="text-xl font-bold text-gray-600">
+                      {petitionData.goal.toLocaleString()}
+                    </span>
                   </div>
                   <div className="w-full bg-gray-300 h-2 rounded-full mt-1">
                     <div
                       className="bg-[#CA3C25] h-2 rounded-full"
-                      style={{ width: `${(petitionData.signed_users.length / petitionData.goal) * 100}%` }}
+                      style={{
+                        width: `${
+                          (petitionData.signed_users.length /
+                            petitionData.goal) *
+                          100
+                        }%`,
+                      }}
                     ></div>
                   </div>
                   <p className="text-gray-700 mt-2 font-semibold">
-                    🤝 {petitionData.signed_users.length} people signed this petition
+                    🤝 {petitionData.signed_users.length} people signed this
+                    petition
                   </p>
                 </div>
 
                 <div className="mt-6">
-                  <h3 className="text-[#223843] font-bold text-xl">Sign this petition</h3>
+                  <h3 className="text-[#223843] font-bold text-xl">
+                    Sign this petition
+                  </h3>
                   <div className="flex items-center gap-2 mt-3">
                     <FaUserCircle className="text-2xl text-gray-600" />
-                    <span className="font-bold">{currentUser?.displayName}</span>
-                    <span className="text-gray-600">
-                      Jamshedpur, Jharkhand
+                    <span className="font-bold">
+                      {currentUser?.displayName}
                     </span>
+                    <span className="text-gray-600">Jamshedpur, Jharkhand</span>
                     <MdModeEdit className="text-gray-500 cursor-pointer" />
                   </div>
 
@@ -242,19 +274,28 @@ const PetitionPage = ({ params }: PageProps) => {
                   />
                   <div className="flex items-center gap-2 mt-2">
                     <button onClick={() => setDisplayName(!displayName)}>
-                      {displayName ? <BsCheckSquare className="text-[#CA3C25] text-lg" /> : <BsSquare className="text-gray-600 text-lg" />}
+                      {displayName ? (
+                        <BsCheckSquare className="text-[#CA3C25] text-lg" />
+                      ) : (
+                        <BsSquare className="text-gray-600 text-lg" />
+                      )}
                     </button>
-                    <span className="text-gray-700">Display my name and comment on this petition</span>
+                    <span className="text-gray-700">
+                      Display my name and comment on this petition
+                    </span>
                   </div>
 
                   <button
                     className="w-full py-3 mt-4 bg-[#CA3C25] hover:bg-red-700 text-white text-lg font-bold rounded-lg"
                     onClick={handleSignPetition} // Using new sign handler
                   >
-                    {isSigning ? 'Signing...' : 'Sign this petition'}
+                    {/* {isSigning ? 'Signing...' : 'Sign this petition'} */}
+                    Sign this petition
                   </button>
                   {signatureError && (
-                    <p className="text-red-500 text-sm mt-2">{signatureError}</p>
+                    <p className="text-red-500 text-sm mt-2">
+                      {signatureError}
+                    </p>
                   )}
                 </div>
               </div>
@@ -280,8 +321,13 @@ const PetitionPage = ({ params }: PageProps) => {
       {showLocationErrorPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-xl font-semibold text-[#CA3C25]">Out of Scope</h3>
-            <p className="mt-4 text-gray-700">You cannot sign this petition as it is out of your scope. Please check the petition's location and scope.</p>
+            <h3 className="text-xl font-semibold text-[#CA3C25]">
+              Out of Scope
+            </h3>
+            <p className="mt-4 text-gray-700">
+              You cannot sign this petition as it is out of your scope. Please
+              check the petition's location and scope.
+            </p>
             <button
               className="mt-4 bg-[#CA3C25] text-white py-2 px-6 rounded-lg"
               onClick={() => setShowLocationErrorPopup(false)}
@@ -303,20 +349,17 @@ const PetitionPage = ({ params }: PageProps) => {
         <OTPVerification
           onVerify={async (phoneNumber: string, otp: string) => {
             try {
-              const response = await fetch(
-                `/api/petitions/${params.id}`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    userId: currentUser?.uid,
-                    phoneNumber,
-                    otp
-                  }),
-                }
-              );
+              const response = await fetch(`/api/petitions/${params.id}`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  userId: currentUser?.uid,
+                  phoneNumber,
+                  otp,
+                }),
+              });
 
               if (!response.ok) {
                 const errorData = await response.json();
@@ -333,7 +376,11 @@ const PetitionPage = ({ params }: PageProps) => {
 
               return true;
             } catch (error) {
-              setSignatureError(error instanceof Error ? error.message : "Failed to sign petition");
+              setSignatureError(
+                error instanceof Error
+                  ? error.message
+                  : "Failed to sign petition"
+              );
               return false;
             }
           }}

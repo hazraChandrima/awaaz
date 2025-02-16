@@ -139,12 +139,12 @@ const Dashboard = () => {
     },
   ];
 
-  const activePetitions = petitionData.map(petition => ({
-    name: petition.title,
-    created: new Date(petition.createdAt?.seconds * 1000).toLocaleDateString(),
-    signed: petition.signed_users?.length || 0,
-    goal: petition.goal || 0
-  }));
+  // const activePetitions = petitionData.map(petition => ({
+  //   name: petition.title,
+  //   created: new Date(petition.createdAt?.seconds * 1000).toLocaleDateString(),
+  //   signed: petition.signed_users?.length || 0,
+  //   goal: petition.goal || 0
+  // }));
 
   const signatureGrowth = petitionData
     .flatMap(petition => 

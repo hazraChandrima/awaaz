@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    let responses: string[] = [];
+    const responses: string[] = [];
 
     for (const prompt of prompts) {
       const result = await model.generateContent(prompt);

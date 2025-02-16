@@ -44,7 +44,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ image, setImage, setUploadedI
         setError(data.error || "Upload failed.");
       }
     } catch (err) {
-      setError("Something went wrong.");
+      console.log("Something went wrong.", err);
     } finally {
       setUploading(false);
     }

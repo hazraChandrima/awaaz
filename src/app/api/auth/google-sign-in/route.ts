@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth, db } from "@/firebase";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { IUser } from "@/interfaces/User";
 import { getDoc } from "firebase/firestore";
 

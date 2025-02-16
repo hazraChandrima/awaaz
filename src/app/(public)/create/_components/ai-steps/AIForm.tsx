@@ -15,7 +15,7 @@ export default function AIForm({ setTitle, setDescription, setStep }: AIFormProp
   const [aiStep, setAiStep] = useState(1);
   const [userPrompt, setUserPrompt] = useState("");
   const [personalStory, setPersonalStory] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [generatedTitle, setGeneratedTitle] = useState(""); // Store AI-generated title
   const [generatedDescription, setGeneratedDescription] = useState(""); // Store AI-generated description
 
@@ -24,7 +24,7 @@ export default function AIForm({ setTitle, setDescription, setStep }: AIFormProp
   };
 
   const handleGenerateContent = async () => {
-    setLoading(true);
+    // setLoading(true);
     setAiStep(3);
   
     try {
@@ -64,7 +64,8 @@ export default function AIForm({ setTitle, setDescription, setStep }: AIFormProp
       console.error("Error generating AI content:", err);
       setAiStep(2);
     } finally {
-      setLoading(false);
+      // setLoading(false);
+      console.log("frustating");
     }
   };
 
