@@ -87,7 +87,7 @@ const getUserLocation = async () => {
 };
 
 const PetitionPage = ({ params }: PageProps) => {
-  const petitionId = React.use(params).id; // Unwrap params using React.use()
+  const petitionId = params.id; // Unwrap params using React.use()
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
   const [displayName, setDisplayName] = useState(true);
