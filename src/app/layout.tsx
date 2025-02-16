@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="scroll-smooth">
       <body className={`${armata.className} antialiased`}>
         <Navbar />
-        <main className="mx-auto lg:py-4 px-6">
+        <main className="mx-auto lg:py-4">
           {children}
         </main>
         <Footer />

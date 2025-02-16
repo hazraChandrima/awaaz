@@ -14,7 +14,7 @@ const Sidebar = () => {
   
 
   return (
-    <div className="w-64 h-screen bg-gray-900 text-white p-5 shadow-lg flex flex-col">
+    <div className="w-64 h-screen bg-[#ab402c] text-white p-5 shadow-lg flex flex-col pt-24">
       <h2 className="text-2xl font-semibold mb-6">Moderator Panel</h2>
       <ul className="flex flex-col gap-2">
         {links.map((link) => (
@@ -22,7 +22,9 @@ const Sidebar = () => {
             <Link
               href={link.path}
               className={`block p-3 rounded-md transition-all ${
-                pathname === link.path ? "bg-gray-700 font-semibold" : "hover:bg-gray-800"
+                pathname === link.path
+                  ? "bg-[#9a3724] font-semibold"
+                  : "hover:bg-[#9a3724]"
               }`}
             >
               {link.name}
