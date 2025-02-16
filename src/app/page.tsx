@@ -24,7 +24,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="bg-[#E8EBE4]">
+      <div className="bg-[#E8EBE4] mt-24">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 lg:pt-32 pb-16 sm:pb-20 lg:pb-24">
           <h1 className="flex flex-wrap items-center font-semibold text-[#223843] text-4xl sm:text-5xl md:text-6xl text-center sm:text-left">
             <span
@@ -77,7 +77,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full my-10 sm:mt-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full my-10 sm:mt-12 ">
         <Carousel />
       </div>
 

@@ -7,9 +7,8 @@ const abhaya = Abhaya_Libre({ subsets: ["latin"], weight: "800" });
 
 export default function Vision() {
   return (
-    <div id="vision" className="bg-[#E8EBE4] py-16 sm:py-24 px-6 sm:px-12 lg:px-20">
+    <div id="vision" className="bg-[#E8EBE4] py-20 sm:py-24 px-6 sm:px-12 lg:px-20">
       <div className="max-w-4xl mx-auto text-center">
-        {/* Title with Animated Underline */}
         <h2
           className={`${abhaya.className} text-[#CA3C25] text-5xl sm:text-6xl font-extrabold`}
         >

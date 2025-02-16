@@ -48,9 +48,10 @@ export default function CustomCarousel() {
 
   return (
     <div className="relative w-full">
-      {/* Petition Card Container */}
+      <div>
+        <h1 className="text-3xl font-bold mb-4">Trending</h1>
+      </div>
       <div className="relative w-full min-h-[260px] overflow-hidden rounded-none shadow-lg group">
-        {/* Background Image */}
         <Image
           src={petitionData[activeIndex].image}
           alt={petitionData[activeIndex].title}
@@ -58,17 +59,15 @@ export default function CustomCarousel() {
           className="object-cover w-full h-full transition-opacity group-hover:opacity-90"
         />
 
-        {/* Content Overlay with Hover Dark Effect */}
         <div className="absolute inset-0 flex flex-col justify-end p-10 bg-gradient-to-t from-black/70 group-hover:from-black/80 transition-all duration-300">
-          {/* Title */}
-          <h3 className="text-white text-2xl font-bold">{petitionData[activeIndex].title}</h3>
+          <h3 className="text-white text-2xl font-bold">
+            {petitionData[activeIndex].title}
+          </h3>
 
-          {/* Description */}
           <p className="text-gray-200 text-lg mt-3 line-clamp-3">
             {petitionData[activeIndex].description}
           </p>
 
-          {/* User Info */}
           <div className="flex items-center gap-5 mt-5 text-white">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
@@ -77,17 +76,22 @@ export default function CustomCarousel() {
                 </span>
               </div>
               <div>
-                <p className="font-medium text-xl">{petitionData[activeIndex].user.name}</p>
-                <p className="text-gray-300 text-sm">{petitionData[activeIndex].user.country}</p>
+                <p className="font-medium text-xl">
+                  {petitionData[activeIndex].user.name}
+                </p>
+                <p className="text-gray-300 text-sm">
+                  {petitionData[activeIndex].user.country}
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Stats */}
           <div className="flex justify-between items-center mt-4 text-gray-300 text-lg">
             <div className="flex items-center gap-2">
               <FaUsers />
-              <span>{petitionData[activeIndex].supporters.toLocaleString()}</span>
+              <span>
+                {petitionData[activeIndex].supporters.toLocaleString()}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <FaEnvelope />
@@ -97,7 +101,6 @@ export default function CustomCarousel() {
         </div>
       </div>
 
-      {/* Navigation Dots */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
         {petitionData.map((_, i) => (
           <button
@@ -110,7 +113,6 @@ export default function CustomCarousel() {
         ))}
       </div>
 
-      {/* Navigation Buttons (React Icons) */}
       <button
         onClick={prevSlide}
         className="absolute left-10 top-1/2 -translate-y-1/2 bg-black/60 text-white p-4 rounded-full hover:bg-black/80 transition flex items-center"

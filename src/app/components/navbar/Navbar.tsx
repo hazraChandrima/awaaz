@@ -34,7 +34,7 @@ function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white shadow-sm border-b border-gray-200">
+    <header className="fixed top-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white shadow-md border-b border-gray-200">
       <nav className="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 p-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center gap-x-1">
           <Link
@@ -44,7 +44,7 @@ function Navbar() {
           >
             <Image
               src={logo}
-              className="h-[35px] w-[100px] md:h-[50px] md:w-[190px]"
+              className="h-[35px] w-[120px] md:h-[50px] md:w-[190px]"
               alt="site logo"
             />
           </Link>
@@ -106,10 +106,10 @@ function Navbar() {
                 <div className="flex flex-col md:flex-row md:justify-end md:items-center gap-0.5 md:gap-1">
                   <a
                     href="#vision"
-                    className="p-2 flex scroll-smooth items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
+                    className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Our Vision
+                    Our Mission
                   </a>
 
                   <Link

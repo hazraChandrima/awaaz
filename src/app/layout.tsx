@@ -14,11 +14,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body className={`${armata.className} antialiased`}>
         <Navbar />
-        <div className="text-center text-3xl font-bold mt-4"></div>
-        <main className="max-w-[85rem] mx-auto lg:py-4">
+        <main className="mx-auto lg:py-4 px-6">
           {children}
         </main>
         <Footer />
