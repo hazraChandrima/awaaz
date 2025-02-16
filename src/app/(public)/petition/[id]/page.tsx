@@ -8,6 +8,7 @@ import ShareModal from "../_components/ShareModal";
 import OTPVerification from "../../../components/OTPVerification";
 import { auth } from "../../../../firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
+import { NextPage } from "next";
 
 interface PetitionData {
   signed_users: string[];
@@ -28,6 +29,11 @@ interface PetitionData {
     nanoseconds: number;
   };
   id: string;
+}
+
+
+interface PageProps {
+  params: { id: string }; // ✅ Fix: params should be a plain object
 }
 
 
@@ -81,7 +87,7 @@ const getUserLocation = async () => {
   });
 };
 
-const PetitionPage = ({ params }: { params: { id: string } }) => {
+const PetitionPage: NextPage<PageProps> = ({ params }) => {
   const petitionId = params.id; // Unwrap params using React.use()
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
