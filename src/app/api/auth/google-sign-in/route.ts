@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth, db } from "@/firebase";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { IUser } from "@/interfaces/User";
-import { getDoc } from "firebase/firestore";
-
-const googleProvider = new GoogleAuthProvider();
 
 export async function POST(req: Request) {
   try {
@@ -19,7 +16,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = await signInWithPopup(auth, googleProvider);
+    // Use token to authenticate server-side
+    const credential = GoogleAuthProvider.credential(token);
+    const result = await signInWithCredential(auth, credential);
     const user = result.user;
 
     const userRef = doc(db, "users", user.uid);
@@ -57,11 +56,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-  if (error instanceof Error) {
-    console.error("Error in Google sign-in API:", error.message);
-  } else {
     console.error("Error in Google sign-in API:", error);
-  }
 
     return NextResponse.json(
       { error: "Google sign-in failed" },
