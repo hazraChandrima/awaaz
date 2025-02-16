@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/firebase";
 import { IPetition } from "@/interfaces/Petition";
 
@@ -9,11 +9,30 @@ export async function GET() {
     const petitions: IPetition[] = [];
 
     querySnapshot.forEach((doc) => {
-      const petitionData = doc.data() as IPetition;
-      petitions.push({
-        ...petitionData,
-        id: doc.id, 
-      });
+      const petitionData = doc.data();
+
+      const petition: IPetition = {
+        id: doc.id,
+        title: petitionData.title,
+        description: petitionData.description,
+        image_url: petitionData.image_url,
+        category: petitionData.category,
+        scope: petitionData.scope,
+        userId: petitionData.userId,
+        location: petitionData.location,
+        goal: petitionData.goal,
+        signed_users: petitionData.signed_users || [],
+        createdAt:
+          petitionData.createdAt instanceof Timestamp
+            ? petitionData.createdAt.toDate()
+            : new Date(),
+        updatedAt:
+          petitionData.updatedAt instanceof Timestamp
+            ? petitionData.updatedAt.toDate()
+            : new Date(),
+      };
+
+      petitions.push(petition);
     });
 
     return NextResponse.json({ petitions }, { status: 200 });

@@ -19,9 +19,19 @@ export default function BrowsePage() {
         const response = await fetch("/api/petitions");
         if (!response.ok) throw new Error("Failed to fetch petitions");
         const data = await response.json();
-        console.log(data);
-        setPetitions(data.petitions);
-        setFilteredPetitions(data.petitions);
+
+        const validPetitions = data.petitions.map((petition: IPetition) => ({
+          ...petition,
+          createdAt: petition.createdAt
+            ? new Date(petition.createdAt)
+            : new Date(),
+          updatedAt: petition.updatedAt
+            ? new Date(petition.updatedAt)
+            : new Date(),
+        }));
+
+        setPetitions(validPetitions);
+        setFilteredPetitions(validPetitions);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
@@ -35,6 +45,7 @@ export default function BrowsePage() {
 
     fetchPetitions();
   }, []);
+
 
 
   useEffect(() => {
