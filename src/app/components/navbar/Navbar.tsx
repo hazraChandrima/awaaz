@@ -105,7 +105,7 @@ function Navbar() {
               <div className="grow">
                 <div className="flex flex-col md:flex-row md:justify-end md:items-center gap-0.5 md:gap-1">
                   <a
-                    href="#vision"
+                    href="/#vision"
                     className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
                     onClick={() => setIsMenuOpen(false)}
                   >

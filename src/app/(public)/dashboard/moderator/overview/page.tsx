@@ -2,7 +2,6 @@
 import Sidebar from "../_components/Sidebar";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 
-// Sample data for the Line Chart (Signers per month)
 const lineData = [
   { month: "Jan", signers: 500 },
   { month: "Feb", signers: 1200 },
@@ -18,7 +17,6 @@ const lineData = [
   { month: "Dec", signers: 10000 },
 ];
 
-// Sample data for the Bar Chart (Popular Categories)
 const barData = [
   { category: "Environment", petitions: 45 },
   { category: "Transport", petitions: 60 },
@@ -29,9 +27,9 @@ const barData = [
 
 const Overview = () => {
   return (
-    <div className="flex mt-20">
+    <div className="flex">
       <Sidebar />
-      <div className="p-6 flex-1">
+      <div className="p-6 pt-24 flex-1">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-gray-600">Overview of your petition campaigns</p>
 
