@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsCheckSquare, BsSquare } from "react-icons/bs";
@@ -8,7 +7,8 @@ import ShareModal from "../_components/ShareModal";
 import OTPVerification from "../../../components/OTPVerification";
 import { auth } from "../../../../firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
-import { NextPage } from "next";
+// import { NextPage } from "next";
+
 
 interface PetitionData {
   signed_users: string[];
@@ -33,7 +33,7 @@ interface PetitionData {
 
 
 interface PageProps {
-  params: { id: string }; // ✅ Fix: params should be a plain object
+  params: { id: string }; 
 }
 
 
@@ -87,8 +87,8 @@ const getUserLocation = async () => {
   });
 };
 
-const PetitionPage: NextPage<PageProps> = ({ params }) => {
-  const petitionId = params.id; // Unwrap params using React.use()
+const PetitionPage: FC<PageProps> = ({ params }) => {
+  const petitionId = params.id;
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
   const [displayName, setDisplayName] = useState(true);
