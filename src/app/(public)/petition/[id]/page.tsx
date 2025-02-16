@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect, FC } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsCheckSquare, BsSquare } from "react-icons/bs";
@@ -7,8 +8,7 @@ import ShareModal from "../_components/ShareModal";
 import OTPVerification from "../../../components/OTPVerification";
 import { auth } from "../../../../firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
-// import { NextPage } from "next";
-
+import { useParams } from "next/navigation";
 
 interface PetitionData {
   signed_users: string[];
@@ -32,9 +32,9 @@ interface PetitionData {
 }
 
 
-interface PageProps {
-  params: { id: string }; 
-}
+// interface PageProps {
+//   params: { id: string }; 
+// }
 
 
 const getUserLocation = async () => {
@@ -87,8 +87,11 @@ const getUserLocation = async () => {
   });
 };
 
-const PetitionPage: FC<PageProps> = ({ params }) => {
-  const petitionId = params.id;
+
+
+const PetitionPage = () => {
+  const params = useParams() ; 
+  const { id: petitionId } = params;
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
   const [displayName, setDisplayName] = useState(true);
@@ -99,10 +102,7 @@ const PetitionPage: FC<PageProps> = ({ params }) => {
   const [signatureError, setSignatureError] = useState("");
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showLocationErrorPopup, setShowLocationErrorPopup] = useState(false); // Popup state
-  const [userLocation, setUserLocation] = useState<{
-    city: string;
-    state: string;
-  } | null>(null);
+  const [userLocation, setUserLocation] = useState<{ city: string; state: string } | null>(null);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -124,7 +124,7 @@ const PetitionPage: FC<PageProps> = ({ params }) => {
     return () => unsubscribe();
   }, []);
 
-  const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ""}`;
+  const shareUrl = `http://localhost:3000/petition/${petitionId || ''}`;
 
   useEffect(() => {
     if (!petitionId) return;
@@ -140,6 +140,8 @@ const PetitionPage: FC<PageProps> = ({ params }) => {
     };
     fetchPetitionData();
   }, [petitionId]);
+  
+  
 
   if (!petitionData) return <div>Loading...</div>;
 
@@ -148,16 +150,17 @@ const PetitionPage: FC<PageProps> = ({ params }) => {
       setShowLocationErrorPopup(true);
       return;
     }
+    
 
     if (signatureError) {
-      alert(signatureError); // Show error message if user is restricted
+      alert(signatureError); 
       return;
     }
 
     if (currentUser) {
       setShowOTPVerification(true);
     } else {
-      window.location.href = "/sign-in";
+      window.location.href = '/sign-in';
     }
   };
 
@@ -350,7 +353,7 @@ const PetitionPage: FC<PageProps> = ({ params }) => {
         <OTPVerification
           onVerify={async (phoneNumber: string, otp: string) => {
             try {
-              const response = await fetch(`/api/petitions/${params.id}`, {
+              const response = await fetch(`/api/petitions/${petitionId}`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

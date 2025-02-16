@@ -4,9 +4,9 @@ import { db } from "../../../../firebase";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await context.params; // Ensure params is awaited
 
   try {
     const docRef = doc(db, "petitions", id);
@@ -16,32 +16,23 @@ export async function GET(
       console.log(docSnap.data());
       return NextResponse.json(docSnap.data());
     } else {
-      return NextResponse.json(
-        { message: "Petition not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "Petition not found" }, { status: 404 });
     }
   } catch (error) {
     console.error("Error fetching petition data:", error);
-    return NextResponse.json(
-      { message: "Error fetching petition data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Error fetching petition data" }, { status: 500 });
   }
 }
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await context.params;
   const { userId } = await req.json();
 
   if (!userId) {
-    return NextResponse.json(
-      { message: "User ID is required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ message: "User ID is required" }, { status: 400 });
   }
 
   try {
@@ -49,49 +40,36 @@ export async function POST(
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
-      return NextResponse.json(
-        { message: "Petition not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "Petition not found" }, { status: 404 });
     }
 
     const petitionData = docSnap.data();
 
-    // Check if user already signed
     if (petitionData.signed_users.includes(userId)) {
-      return NextResponse.json(
-        { message: "User already signed this petition" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "User already signed this petition" }, { status: 400 });
     }
 
-    // Add user to signed_users array
-    await updateDoc(docRef, {
-      signed_users: arrayUnion(userId),
-    });
+    await updateDoc(docRef, { signed_users: arrayUnion(userId) });
 
-    return NextResponse.json(
-      { message: "Signature added successfully" },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Signature added successfully" }, { status: 200 });
   } catch (error) {
     console.error("Error adding signature:", error);
-    return NextResponse.json(
-      { message: "Error adding signature" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Error adding signature" }, { status: 500 });
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  try {
-    const petitionId = params.id;
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
 
-    if (!petitionId) {
+  try {
+    if (!id) {
       return NextResponse.json({ error: "Petition ID is required" }, { status: 400 });
     }
 
-    const petitionRef = doc(db, "petitions", petitionId);
+    const petitionRef = doc(db, "petitions", id);
     const petitionSnap = await getDoc(petitionRef);
 
     if (!petitionSnap.exists()) {

@@ -1,7 +1,8 @@
 import React from "react";
 import { FaEnvelope } from "react-icons/fa";
 import Image from "next/image";
-import {format} from "date-fns";
+import { format } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 import { IPetition } from "@/interfaces/Petition";
 import Link from "next/link";
 
@@ -10,7 +11,13 @@ interface PetitionCardProps {
 }
 
 const PetitionCard: React.FC<PetitionCardProps> = ({ petition }) => {
-  const date = new Date(petition.createdAt.seconds * 1000);
+  let date: Date;
+
+  if (petition.createdAt instanceof Timestamp) {
+    date = petition.createdAt.toDate();
+  } else {
+    date = new Date(petition.createdAt);
+  }
 
   const formattedDate = format(date, "do MMM yyyy");
 
@@ -18,7 +25,9 @@ const PetitionCard: React.FC<PetitionCardProps> = ({ petition }) => {
     <div className="border rounded-lg shadow-sm hover:shadow-md transition bg-white flex">
       <div className="flex-1 p-4 flex flex-col justify-between border-r">
         <div>
-          <Link href={`/petition/${petition.id}`} className="font-bold text-lg">{petition.title}</Link>
+          <Link href={`/petition/${petition.id}`} className="font-bold text-lg">
+            {petition.title}
+          </Link>
           <p className="text-gray-600 mt-1 line-clamp-3 text-sm">
             {petition.description}
           </p>
