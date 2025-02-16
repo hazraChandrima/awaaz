@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next'
  
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Awaaz',
+    name: 'Awaaz - Empower Change',
     short_name: 'awaaz',
-    description: 'Raise your voice, Shape the change',
+    description: 'Bring the Change with Your Voice',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
