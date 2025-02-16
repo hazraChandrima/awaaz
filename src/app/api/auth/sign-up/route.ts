@@ -3,6 +3,9 @@ import { auth, db } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import { IUser } from "@/interfaces/User";
+import { FirebaseError } from "firebase/app";
+
+
 
 export async function POST(req: Request) {
   try {
@@ -54,17 +57,20 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error) {
-    if (error instanceof Error) {
+    if (error instanceof FirebaseError) {
       console.error("Error in users route:", error.message);
 
-      if ((error as any).code === "auth/email-already-in-use") {
+      if (error.code === "auth/email-already-in-use") {
         return NextResponse.json(
           { error: "Email already in use" },
           { status: 400 }
         );
       }
+    } else if (error instanceof Error) {
+      console.error("Error in users route:", error.message);
     } else {
       console.error("Unexpected error in users route:", error);
     }
   }
+
 }

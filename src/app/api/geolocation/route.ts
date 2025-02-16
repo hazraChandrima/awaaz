@@ -30,9 +30,10 @@ export async function GET(req: Request) {
     const city = data.results[0].address_components.find((comp: AddressComponent) =>
       comp.types.includes("locality")
     )?.long_name;
-    const state = data.results[0].address_components.find((comp: any) =>
+    const state = data.results[0].address_components.find((comp: AddressComponent) =>
       comp.types.includes("administrative_area_level_1")
     )?.long_name;
+
 
     return NextResponse.json({ city: city || "Unknown", state: state || "Unknown" });
   } catch (error) {

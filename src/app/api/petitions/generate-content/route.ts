@@ -3,6 +3,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
+interface GenerativeResponse {
+  response: {
+    candidates?: { content: string }[];
+  };
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { prompts }: { prompts: string[] } = await req.json();
@@ -15,10 +21,9 @@ export async function POST(req: NextRequest) {
     const responses: string[] = [];
 
     for (const prompt of prompts) {
-      const result = await model.generateContent(prompt);
+      const result = (await model.generateContent(prompt)) as GenerativeResponse;
 
-      // Ensure correct extraction of text response
-      const responseText = (result as any)?.response?.candidates?.[0]?.content ?? "No response";
+      const responseText = result.response?.candidates?.[0]?.content ?? "No response";
       responses.push(responseText);
     }
 
