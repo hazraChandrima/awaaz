@@ -326,7 +326,7 @@ const PetitionPage = ({ params }: PageProps) => {
             </h3>
             <p className="mt-4 text-gray-700">
               You cannot sign this petition as it is out of your scope. Please
-              check the petition's location and scope.
+              check the petition&apos;s location and scope.
             </p>
             <button
               className="mt-4 bg-[#CA3C25] text-white py-2 px-6 rounded-lg"

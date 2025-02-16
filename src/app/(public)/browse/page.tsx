@@ -12,6 +12,7 @@ export default function BrowsePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+
   useEffect(() => {
     const fetchPetitions = async () => {
       try {
@@ -21,8 +22,12 @@ export default function BrowsePage() {
         console.log(data);
         setPetitions(data.petitions);
         setFilteredPetitions(data.petitions);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred");
+        }
       } finally {
         setLoading(false);
       }
@@ -30,6 +35,7 @@ export default function BrowsePage() {
 
     fetchPetitions();
   }, []);
+
 
   useEffect(() => {
     applyFilter();

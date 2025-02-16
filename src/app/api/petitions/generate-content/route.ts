@@ -5,7 +5,7 @@ const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
 export async function POST(req: NextRequest) {
   try {
-    const { prompts } = await req.json();
+    const { prompts }: { prompts: string[] } = await req.json();
 
     if (!Array.isArray(prompts) || prompts.length === 0) {
       return NextResponse.json({ error: "Invalid prompts array" }, { status: 400 });
@@ -17,17 +17,19 @@ export async function POST(req: NextRequest) {
     for (const prompt of prompts) {
       const result = await model.generateContent(prompt);
 
-      // Extract the text correctly
-      const responseText = result?.response?.candidates?.[0]?.content ?? "No response";
+      // Ensure correct extraction of text response
+      const responseText = (result as any)?.response?.candidates?.[0]?.content ?? "No response";
       responses.push(responseText);
     }
 
     return NextResponse.json({ responses }, { status: 200 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error generating content:", error);
+
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to generate content", details: error.message || error },
+      { error: "Failed to generate content", details: errorMessage },
       { status: 500 }
     );
   }

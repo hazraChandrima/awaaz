@@ -21,7 +21,13 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Location not found" }, { status: 404 });
     }
 
-    const city = data.results[0].address_components.find((comp: any) =>
+    interface AddressComponent {
+      long_name: string;
+      short_name: string;
+      types: string[];
+    }
+
+    const city = data.results[0].address_components.find((comp: AddressComponent) =>
       comp.types.includes("locality")
     )?.long_name;
     const state = data.results[0].address_components.find((comp: any) =>

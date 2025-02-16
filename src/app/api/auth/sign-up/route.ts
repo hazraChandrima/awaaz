@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       lastname: lastName,
       email: email,
       profile_image: "",
-      location: "", 
+      location: "",
       phone_number: "",
       verified: false,
       createdAt: new Date(),
@@ -53,19 +53,18 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
-    console.error("Error in users route:", error);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error in users route:", error.message);
 
-    if (error.code === "auth/email-already-in-use") {
-      return NextResponse.json(
-        { error: "Email already in use" },
-        { status: 400 }
-      );
+      if ((error as any).code === "auth/email-already-in-use") {
+        return NextResponse.json(
+          { error: "Email already in use" },
+          { status: 400 }
+        );
+      }
+    } else {
+      console.error("Unexpected error in users route:", error);
     }
-
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
   }
 }

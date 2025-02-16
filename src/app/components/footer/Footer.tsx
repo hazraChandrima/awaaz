@@ -101,7 +101,7 @@ const Footer = () => {
                   className="inline-flex gap-x-2 text-gray-200 hover:text-gray-50 focus:outline-none focus:text-gray-50"
                   href="#"
                 >
-                  What's New
+                  What&apos;s New
                 </a>
               </p>
               <p>

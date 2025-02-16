@@ -60,7 +60,7 @@ export default function CreatePetitionPage() {
       googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
       libraries={["places"]}
     >
-      <div className="w-full p-6 bg-white shadow-lg mt-20">
+      <div className="w-full p-6 bg-white  mt-28">
         <div className="mb-6 text-center">
           {loading ? (
             <div className="text-center">

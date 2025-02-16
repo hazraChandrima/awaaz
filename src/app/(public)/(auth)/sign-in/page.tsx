@@ -26,8 +26,12 @@ export default function Login() {
       );
       console.log("User signed in:", userCredential.user);
       window.location.href = "/";
-    } catch (err: any) {
-      setError(err.message || "Invalid credentials");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Invalid credentials");
+      }
     } finally {
       setLoading(false);
     }
@@ -43,15 +47,18 @@ export default function Login() {
           break;
         case "facebook":
           throw new Error("Currently not available.");
-          break;
         default:
           throw new Error("Unsupported provider");
       }
       const userCredential = await signInWithPopup(auth, authProvider);
       console.log("User signed in with OAuth:", userCredential.user);
       window.location.href = "/";
-    } catch (err: any) {
-      setError(err.message || "Failed to sign in with OAuth");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to sign in with OAuth");
+      }
     } finally {
       setLoading(false);
     }
@@ -59,14 +66,14 @@ export default function Login() {
 
   return (
     <>
-      <div className="mt-28 py-12 px-6 bg-white border border-gray-200 rounded-xl shadow-lg max-w-[35rem] mx-auto">
+      <div className="mt-28 py-12 px-6 bg-[#d0ab7d21] border border-gray-200 rounded-xl shadow-lg max-w-[32rem] mx-auto">
         <div className="p-6 sm:p-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-800">Sign In</h1>
             <p className="mt-2 text-sm text-gray-600">
-              Don't have an account ? {" "}
+              Don&apos;t have an account?{" "}
               <a
-                className="text-blue-600 hover:underline font-medium"
+                className="text-[#b3452e] hover:underline font-medium"
                 href="/sign-up"
               >
                 Create new
@@ -85,7 +92,9 @@ export default function Login() {
               {loading ? (
                 <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
               ) : (
-                <><FaGoogle /> Google</>
+                <>
+                  <FaGoogle /> Google
+                </>
               )}
             </button>
             <button
@@ -97,7 +106,9 @@ export default function Login() {
               {loading ? (
                 <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
               ) : (
-                <><FaFacebook /> Facebook</>
+                <>
+                  <FaFacebook /> Facebook
+                </>
               )}
             </button>
           </div>

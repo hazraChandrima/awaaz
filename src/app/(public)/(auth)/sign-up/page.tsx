@@ -40,9 +40,13 @@ export default function SignUp() {
 
       setShowVerificationModal(true);
       setError("");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong during sign-up.");
+      }
       console.error("Sign-up error:", err);
-      setError(err.message || "Something went wrong during sign-up.");
     } finally {
       setLoading(false);
     }
@@ -67,9 +71,13 @@ export default function SignUp() {
       const userCredential = await signInWithPopup(auth, authProvider);
       console.log("User signed up with OAuth:", userCredential.user);
       router.push("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to sign up with OAuth.");
+      }
       console.error("OAuth sign-up error:", err);
-      setError(err.message || "Failed to sign up with OAuth.");
     } finally {
       setLoading(false);
     }
@@ -77,14 +85,14 @@ export default function SignUp() {
 
   return (
     <>
-      <div className="py-12 px-6 mt-8 bg-white border border-gray-200 rounded-xl shadow-lg max-w-[35rem] mx-auto">
+      <div className="mt-28 py-12 px-6 bg-[#d0ab7d21] border border-gray-200 rounded-xl shadow-lg max-w-[35rem] mx-auto">
         <div className="p-6 sm:p-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-800">Sign Up</h1>
             <p className="mt-2 text-sm text-gray-600">
               Already have an account?{" "}
               <a
-                className="text-blue-600 hover:underline font-medium"
+                className="text-[#9a3724] hover:underline font-medium"
                 href="/sign-in"
               >
                 Sign in

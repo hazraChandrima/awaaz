@@ -104,13 +104,13 @@ function Navbar() {
             <div className="py-2 md:py-0 flex flex-col md:flex-row md:items-center gap-0.5 md:gap-1">
               <div className="grow">
                 <div className="flex flex-col md:flex-row md:justify-end md:items-center gap-0.5 md:gap-1">
-                  <a
+                  <Link
                     href="/#vision"
                     className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Our Mission
-                  </a>
+                  </Link>
 
                   <Link
                     href="/browse"
@@ -139,7 +139,7 @@ function Navbar() {
                 {currentUser ? (
                   <button
                     onClick={handleLogout}
-                    className="py-[7px] px-2.5 inline-flex items-center font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100"
+                    className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none hover:bg-[#b13521]"
                   >
                     Log Out
                   </button>
@@ -154,7 +154,7 @@ function Navbar() {
                     </Link>
                     <Link
                       href="/sign-up"
-                      className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none"
+                      className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none hover:bg-[#b13521]"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Get started

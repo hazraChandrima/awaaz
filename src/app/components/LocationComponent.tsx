@@ -1,9 +1,16 @@
-// pages/test/page.tsx
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 
+interface AddressComponent {
+  long_name: string;
+  types: string[];
+}
+
 const TestPage: React.FC = () => {
-  const [locationData, setLocationData] = useState<{ city: string; state: string } | null>(null);
+  const [locationData, setLocationData] = useState<{
+    city: string;
+    state: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,13 +28,18 @@ const TestPage: React.FC = () => {
             );
             const data = await response.json();
             if (data.status === "OK" && data.results.length > 0) {
-              const city = data.results[0].address_components.find((component: any) =>
-                component.types.includes("locality")
+              const city = data.results[0].address_components.find(
+                (component: AddressComponent) =>
+                  component.types.includes("locality")
               )?.long_name;
-              const state = data.results[0].address_components.find((component: any) =>
-                component.types.includes("administrative_area_level_1")
+              const state = data.results[0].address_components.find(
+                (component: AddressComponent) =>
+                  component.types.includes("administrative_area_level_1")
               )?.long_name;
-              setLocationData({ city: city || "Unknown", state: state || "Unknown" });
+              setLocationData({
+                city: city || "Unknown",
+                state: state || "Unknown",
+              });
             } else {
               setError("Could not find location data.");
             }

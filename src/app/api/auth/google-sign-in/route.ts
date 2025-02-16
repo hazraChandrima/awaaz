@@ -56,8 +56,12 @@ export async function POST(req: Request) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
+  if (error instanceof Error) {
+    console.error("Error in Google sign-in API:", error.message);
+  } else {
     console.error("Error in Google sign-in API:", error);
+  }
 
     return NextResponse.json(
       { error: "Google sign-in failed" },

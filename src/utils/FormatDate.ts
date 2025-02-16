@@ -1,4 +1,4 @@
-function formatDate(date:any) {
+function formatDate(date: Date) {
     // Check if the input is a valid Date object
     if (!(date instanceof Date)) {
         throw new TypeError("Invalid Date object");
