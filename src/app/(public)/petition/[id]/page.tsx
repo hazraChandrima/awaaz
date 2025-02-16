@@ -1,6 +1,6 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsCheckSquare, BsSquare } from "react-icons/bs";
@@ -30,11 +30,11 @@ interface PetitionData {
   id: string;
 }
 
+
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: { id: string }; // ✅ Fix: params should be a plain object
 }
+
 
 const getUserLocation = async () => {
   if (!navigator.geolocation) {
@@ -49,7 +49,7 @@ const getUserLocation = async () => {
 
         try {
           const response = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
           );
           const data = await response.json();
           console.log(data);
@@ -87,6 +87,7 @@ const getUserLocation = async () => {
 };
 
 const PetitionPage = ({ params }: PageProps) => {
+  const petitionId = React.use(params).id; // Unwrap params using React.use()
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
   const [displayName, setDisplayName] = useState(true);
@@ -122,29 +123,30 @@ const PetitionPage = ({ params }: PageProps) => {
   const shareUrl = `http://localhost:3000/petition/${petitionData?.id || ''}`;
 
   useEffect(() => {
+    if (!petitionId) return;
     const fetchPetitionData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/api/petitions/${params.id}`
-        );
+        const response = await fetch(`/api/petitions/${petitionId}`);
+        if (!response.ok) throw new Error("Failed to fetch petition");
         const data = await response.json();
         setPetitionData(data);
       } catch (error) {
         console.error("Error fetching petition data:", error);
       }
     };
-
     fetchPetitionData();
-  }, [params.id]);
+  }, [petitionId]);
+  
+  
 
   if (!petitionData) return <div>Loading...</div>;
 
   const handleSignPetition = () => {
-    // Check if the petition's location is Mumbai, Maharashtra, India
-    if (petitionData.location === "Mumbai, Maharashtra, India") {
-      setShowLocationErrorPopup(true); // Show error popup
+    if (petitionData.scope === "local" && userLocation?.city !== "Mumbai") {
+      setShowLocationErrorPopup(true);
       return;
     }
+    
 
     if (signatureError) {
       alert(signatureError); // Show error message if user is restricted
@@ -324,7 +326,7 @@ const PetitionPage = ({ params }: PageProps) => {
               setIsModalOpen(true);
               // Refresh petition data
               const updatedResponse = await fetch(
-                `/api/petitions/${params.id}`
+                `/api/petitions/${petitionId}`
               );
               const updatedData = await updatedResponse.json();
               setPetitionData(updatedData);
