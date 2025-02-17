@@ -32,11 +32,9 @@ interface PetitionData {
   id: string;
 }
 
-
 // interface PageProps {
-//   params: { id: string }; 
+//   params: { id: string };
 // }
-
 
 const getUserLocation = async () => {
   if (!navigator.geolocation) {
@@ -69,7 +67,9 @@ const getUserLocation = async () => {
           for (const component of data.results[0].address_components) {
             if (component.types.includes("locality")) {
               city = component.long_name;
-            } else if (component.types.includes("administrative_area_level_1")) {
+            } else if (
+              component.types.includes("administrative_area_level_1")
+            ) {
               state = component.long_name;
             }
           }
@@ -88,8 +88,6 @@ const getUserLocation = async () => {
   });
 };
 
-
-
 const PetitionPage = () => {
   const params = useParams();
   const { id: petitionId } = params;
@@ -102,17 +100,19 @@ const PetitionPage = () => {
   const [signatureError, setSignatureError] = useState("");
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showLocationErrorPopup, setShowLocationErrorPopup] = useState(false);
-  const [userLocation, setUserLocation] = useState<{ city: string; state: string } | null>(null);
-  const [locationLoading, setLocationLoading] = useState<boolean>(true); 
+  const [userLocation, setUserLocation] = useState<{
+    city: string;
+    state: string;
+  } | null>(null);
+  const [locationLoading, setLocationLoading] = useState<boolean>(true);
   const [petitionLoading, setPetitionLoading] = useState<boolean>(true);
-
 
   useEffect(() => {
     const fetchLocation = async () => {
       setLocationLoading(true);
       const location = await getUserLocation();
       setUserLocation(location);
-      setLocationLoading(false); 
+      setLocationLoading(false);
     };
 
     fetchLocation();
@@ -148,16 +148,13 @@ const PetitionPage = () => {
     fetchPetitionData();
   }, [petitionId]);
 
-
   if (locationLoading || petitionLoading) {
-    return <Loading />; 
+    return <Loading />;
   }
-
 
   if (!petitionData) {
     return <div className="text-center py-10">No petition found.</div>;
   }
-
 
   const handleSignPetition = () => {
     if (petitionData.scope === "local" && userLocation?.city !== "Mumbai") {
