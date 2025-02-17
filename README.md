@@ -1,5 +1,4 @@
-# Awaaz 
-## Bring the Change with Your Voice 
+# Awaaz - Bring the Change with Your Voice 
 ### Live Site: [Awaaz](https://awaaz-alpha.vercel.app/)
 
 
