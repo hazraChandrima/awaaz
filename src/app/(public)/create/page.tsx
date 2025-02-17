@@ -31,7 +31,7 @@ export default function CreatePetitionPage() {
     setTimeout(() => {
       setLoading(false);
       setStep(1);
-    }, 2000);
+    }, 2500);
   }, []);
 
   const handleNextStep = () => {
