@@ -9,6 +9,7 @@ import OTPVerification from "../../../components/OTPVerification";
 import { auth } from "../../../../firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { useParams } from "next/navigation";
+import Loading from "@/app/components/loading/Loading";
 
 interface PetitionData {
   signed_users: string[];
@@ -90,7 +91,7 @@ const getUserLocation = async () => {
 
 
 const PetitionPage = () => {
-  const params = useParams() ; 
+  const params = useParams();
   const { id: petitionId } = params;
   const [petitionData, setPetitionData] = useState<PetitionData | null>(null);
   const [signature, setSignature] = useState("");
@@ -98,69 +99,81 @@ const PetitionPage = () => {
   const [activeTab, setActiveTab] = useState("details");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  // const [isSigning, setIsSigning] = useState(false);
   const [signatureError, setSignatureError] = useState("");
   const [showOTPVerification, setShowOTPVerification] = useState(false);
-  const [showLocationErrorPopup, setShowLocationErrorPopup] = useState(false); // Popup state
+  const [showLocationErrorPopup, setShowLocationErrorPopup] = useState(false);
   const [userLocation, setUserLocation] = useState<{ city: string; state: string } | null>(null);
+  const [locationLoading, setLocationLoading] = useState<boolean>(true); 
+  const [petitionLoading, setPetitionLoading] = useState<boolean>(true);
+
 
   useEffect(() => {
     const fetchLocation = async () => {
+      setLocationLoading(true);
       const location = await getUserLocation();
       setUserLocation(location);
+      setLocationLoading(false); 
     };
+
     fetchLocation();
   }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
+      setCurrentUser(user || null);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const shareUrl = `http://localhost:3000/petition/${petitionId || ''}`;
+  const shareUrl = `http://localhost:3000/petition/${petitionId || ""}`;
 
   useEffect(() => {
     if (!petitionId) return;
+
     const fetchPetitionData = async () => {
       try {
+        setPetitionLoading(true); // Set loading before fetching
         const response = await fetch(`/api/petitions/${petitionId}`);
         if (!response.ok) throw new Error("Failed to fetch petition");
         const data = await response.json();
         setPetitionData(data);
       } catch (error) {
         console.error("Error fetching petition data:", error);
+      } finally {
+        setPetitionLoading(false);
       }
     };
+
     fetchPetitionData();
   }, [petitionId]);
-  
-  
 
-  if (!petitionData) return <div>Loading...</div>;
+
+  if (locationLoading || petitionLoading) {
+    return <Loading />; 
+  }
+
+
+  if (!petitionData) {
+    return <div className="text-center py-10">No petition found.</div>;
+  }
+
 
   const handleSignPetition = () => {
     if (petitionData.scope === "local" && userLocation?.city !== "Mumbai") {
       setShowLocationErrorPopup(true);
       return;
     }
-    
 
     if (signatureError) {
-      alert(signatureError); 
+      alert(signatureError);
       return;
     }
 
     if (currentUser) {
       setShowOTPVerification(true);
     } else {
-      window.location.href = '/sign-in';
+      window.location.href = "/sign-in";
     }
   };
 

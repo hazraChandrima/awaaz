@@ -22,45 +22,52 @@ const PetitionCard: React.FC<PetitionCardProps> = ({ petition }) => {
   const formattedDate = format(date, "do MMM yyyy");
 
   return (
-    <div className="border rounded-lg shadow-sm hover:shadow-md transition bg-white flex">
-      <div className="flex-1 p-4 flex flex-col justify-between border-r">
-        <div>
-          <Link href={`/petition/${petition.id}`} className="font-bold text-lg">
-            {petition.title}
-          </Link>
-          <p className="text-gray-600 mt-1 line-clamp-3 text-sm">
-            {petition.description}
-          </p>
-        </div>
+    <div>
+      <Link href={`/petition/${petition.id}`}>
+        <div className="border-2 rounded-lg shadow-sm hover:shadow-md transition bg-white flex flex-col md:flex-row overflow-hidden">
+          {/* Text Content */}
+          <div className="flex-1 p-4 flex flex-col justify-between border-b md:border-b-0 md:border-r">
+            <div>
+              <h2 className="font-bold text-lg  hover:underline">
+                {petition.title}
+              </h2>
+              <p className="text-gray-600 mt-2 line-clamp-3 text-sm">
+                {petition.description}
+              </p>
+            </div>
 
-        <hr className="border-gray-300 my-2" />
+            <hr className="border-gray-300 my-3" />
 
-        <div className="flex justify-between items-center">
-          <div className="text-xs text-gray-500">
-            <p>
-              <span className="font-medium">Category:</span> {petition.category}
-            </p>
-            <p>
-              <span className="font-medium">Location:</span> {petition.location}
-            </p>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center text-xs text-gray-500">
+              <div>
+                <p>
+                  <span className="font-medium">Category:</span>{" "}
+                  {petition.category}
+                </p>
+                <p>
+                  <span className="font-medium">Location:</span>{" "}
+                  {petition.location}
+                </p>
+              </div>
+              <div className="flex items-center space-x-2 mt-2 md:mt-0">
+                <FaEnvelope className="text-gray-400" />
+                <span>{formattedDate}</span>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-gray-500 text-xs">
-            <FaEnvelope />
-            <span>{formattedDate}</span>
+          {/* Image */}
+          <div className="w-full md:w-56 h-40 md:h-auto relative">
+            <Image
+              src={petition.image_url || "/placeholder.jpg"}
+              layout="fill"
+              objectFit="cover"
+              alt={petition.title}
+              className="rounded-b-lg md:rounded-b-none md:rounded-r-lg"
+            />
           </div>
         </div>
-      </div>
-
-      <div className="w-56">
-        <Image
-          src={petition.image_url || "/placeholder.jpg"}
-          width={200}
-          height={100}
-          alt={petition.title}
-          className="w-full h-full object-cover rounded-r-lg"
-        />
-      </div>
+      </Link>
     </div>
   );
 };

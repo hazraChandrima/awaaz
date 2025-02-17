@@ -34,7 +34,7 @@ function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white shadow-md border-b border-gray-200">
+    <header className="fixed top-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white shadow-md border-b border-gray-200 z-50">
       <nav className="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 p-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center gap-x-1">
           <Link
@@ -139,7 +139,7 @@ function Navbar() {
                 {currentUser ? (
                   <button
                     onClick={handleLogout}
-                    className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none hover:bg-[#b13521]"
+                    className="py-2 px-2.5 transition duration-300 ease-in-out transform inline-flex items-center font-medium text-sm rounded-lg bg-[#CA3C25] text-white focus:outline-none disabled:opacity-50 disabled:pointer-events-none hover:bg-[#b13521]"
                   >
                     Log Out
                   </button>
