@@ -84,8 +84,8 @@ export default function SignUp() {
   };
 
   return (
-    <>
-      <div className="mt-28 py-12 px-6 bg-[#d0ab7d21] border border-gray-200 rounded-xl shadow-lg max-w-[35rem] mx-auto">
+    <div className="px-4">
+      <div className="mt-28 py-12 px-6 bg-[#d0ab7d21] border border-gray-300 rounded-xl shadow-lg max-w-[32rem] mx-auto">
         <div className="p-6 sm:p-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-800">Sign Up</h1>
@@ -102,29 +102,29 @@ export default function SignUp() {
 
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
-          <div className="mt-6 flex space-x-2">
+          <div className="mt-6 flex space-x-2 justify-center">
             <button
               type="button"
-              className="w-full py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
+              className="py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
               onClick={() => handleOAuthSignUp("google")}
               disabled={loading}
             >
-              <FaGoogle /> Google
+              <FaGoogle /> <span className="hidden sm:block">Google</span>
             </button>
             <button
               type="button"
-              className="w-full py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
+              className="py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
               onClick={() => handleOAuthSignUp("facebook")}
               disabled={loading}
             >
-              <FaFacebook /> Facebook
+              <FaFacebook /> <span className="hidden sm:block">Facebook</span>
             </button>
             <button
               type="button"
-              className="w-full py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
+              className="py-3 px-4 flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-800 shadow-sm hover:bg-gray-50 transition duration-200"
               disabled
             >
-              <FaLinkedinIn /> LinkedIn
+              <FaLinkedinIn /> <span className="hidden sm:block">LinkedIn</span>
             </button>
           </div>
 
@@ -139,7 +139,7 @@ export default function SignUp() {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
-              className="py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm"
+              className="py-2 px-4 block w-full border border-gray-300 rounded-lg text-sm"
             />
             <input
               type="text"
@@ -147,7 +147,7 @@ export default function SignUp() {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
-              className="py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm"
+              className="py-2 px-4 block w-full border border-gray-300 rounded-lg text-sm"
             />
             <input
               type="email"
@@ -155,7 +155,7 @@ export default function SignUp() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm"
+              className="py-2 px-4 block w-full border border-gray-300 rounded-lg text-sm"
             />
             <input
               type="password"
@@ -163,15 +163,15 @@ export default function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm"
+              className="py-2 px-4 block w-full border border-gray-300 rounded-lg text-sm"
             />
             <button
               type="submit"
-              className="w-full py-3 px-4 bg-[#CA3C25] text-white rounded-lg hover:bg-[#B83420] flex justify-center items-center"
+              className="py-3 px-2 bg-[#CA3C25] text-white rounded-lg hover:bg-[#B83420] flex justify-center items-center"
               disabled={loading}
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-gray-300 border-t-white rounded-full animate-spin"></div>
+                <div className="h-5 border-2 border-gray-300 border-t-white rounded-full animate-spin"></div>
               ) : (
                 "Sign Up"
               )}
@@ -209,6 +209,6 @@ export default function SignUp() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

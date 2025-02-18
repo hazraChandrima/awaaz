@@ -65,8 +65,8 @@ export default function Login() {
   };
 
   return (
-    <>
-      <div className="mt-28 py-12 px-6 bg-[#d0ab7d21] border border-gray-200 rounded-xl shadow-lg max-w-[32rem] mx-auto">
+    <div className="px-4">
+      <div className="mt-28 py-12 px-6 bg-[#d0ab7d21] border border-gray-300 rounded-xl shadow-lg max-w-[32rem] mx-auto">
         <div className="p-6 sm:p-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-800">Sign In</h1>
@@ -124,7 +124,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm"
+              className="py-2 px-4 block w-full border border-gray-300 rounded-lg text-sm"
             />
             <input
               type="password"
@@ -132,7 +132,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm"
+              className="py-2 px-4 block w-full border border-gray-300 rounded-lg text-sm"
             />
             <button
               type="submit"
@@ -154,6 +154,6 @@ export default function Login() {
           <div className="w-10 h-10 border-4 border-gray-300 border-t-[#CA3C25] rounded-full animate-spin"></div>
         </div>
       )}
-    </>
+    </div>
   );
 }
