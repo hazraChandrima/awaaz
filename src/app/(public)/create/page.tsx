@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LoadScript } from "@react-google-maps/api";
 import ScopeSelector from "./_components/ScopeSelector";
 import LocationInput from "./_components/LocationInput";
@@ -23,16 +23,8 @@ export default function CreatePetitionPage() {
   const [image, setImage] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [locationError, setLocationError] = useState<boolean>(false);
-  // const [goal, setGoal] = useState<number>(100);
   const goal = 100;
   const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-      setStep(1);
-    }, 2500);
-  }, []);
 
   const handleNextStep = () => {
     if (step === 2 && !location.trim() && scope !== "Global") {
@@ -60,26 +52,24 @@ export default function CreatePetitionPage() {
     );
   };
 
-  if (loading) {
-    return <Loading />;
-  }
-
   return (
     <LoadScript
       googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
       libraries={["places"]}
+      onLoad={() => setLoading(false)}
+      onError={() => setLoading(false)}
     >
-      <div className="w-full p-6 bg-white  mt-28">
-        <div className="mb-6 text-center">
-          <>
-            <div className="mb-6 text-center">
-              <p className="text-lg font-semibold">Step {step} of 7</p>
-              <div className="mt-2 h-2 w-full bg-gray-200 rounded">
-                <div
-                  className="h-2 bg-[#CA3C25] rounded transition-all"
-                  style={{ width: `${(step / 7) * 100}%` }}
-                ></div>
-              </div>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="w-full p-6 bg-white mt-28">
+          <div className="mb-6 text-center">
+            <p className="text-lg font-semibold">Step {step} of 7</p>
+            <div className="my-10 h-2 w-full bg-gray-200 rounded">
+              <div
+                className="h-2 bg-[#CA3C25] rounded transition-all"
+                style={{ width: `${(step / 7) * 100}%` }}
+              ></div>
             </div>
 
             {step === 1 && (
@@ -158,9 +148,9 @@ export default function CreatePetitionPage() {
                 )}
               </div>
             )}
-          </>
+          </div>
         </div>
-      </div>
+      )}
     </LoadScript>
   );
 }
