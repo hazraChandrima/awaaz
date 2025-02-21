@@ -40,6 +40,7 @@ export default function SignUp() {
 
       setShowVerificationModal(true);
       setError("");
+
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -47,6 +48,7 @@ export default function SignUp() {
         setError("Something went wrong during sign-up.");
       }
       console.error("Sign-up error:", err);
+      
     } finally {
       setLoading(false);
     }
